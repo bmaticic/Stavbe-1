@@ -1,16 +1,13 @@
 <div class="container mt-3">
     <div class="d-flex">
         <div class="btn-group">
-            <button class="btn btn-primary"
-                btnRadio="Unread">
+            <button class="btn btn-primary" btnRadio="Unread">
                 Unread
             </button>
-            <button class="btn btn-primary"
-                btnRadio="Inbox">
+            <button class="btn btn-primary" btnRadio="Inbox">
                 Inbox
             </button>
-            <button class="btn btn-primary"
-                btnRadio="Outbox" >
+            <button class="btn btn-primary" btnRadio="Outbox">
                 Outbox
             </button>
         </div>
@@ -18,36 +15,39 @@
 </div>
 
 @if (!merilnaMesta || merilnaMesta.length == 0) {
-    <h3 class="mt-3">Ni merilnih mest</h3>
+<h3 class="mt-3">Ni merilnih mest</h3>
 } @else {
-    <table class="table table-hover mt-3" style="cursor: pointer;">
-        <thead>
-            <tr>
-                <th style="width: 40%;">Šifra merilnega mesta</th>
-                <th style="width: 20%;">Energent</th>
-                <th style="width: 30%;">Dobavitelj</th>
-                <th style="width: 10%;"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (merMesto of merilnaMesta; track $index) {
-                <tr>
-                    <td>{{merMesto.stMerilnegaMesta}}</td>
-                    <td>{{merMesto.energentTip}}</td>
-                    <td>{{merMesto.dobavitelj}}</td>
-                    <td>
-                        <div>
-                            <i class="fa fa-bar-chart me-2" 
-                                aria-hidden="true" 
-                                style="color: blueviolet;">
-                            </i>
-                            <!-- <img src="stavbeService.stavbaSignal()?.photoUrl || './assets/gas.png'"> -->
-                        </div>
-                    </td>
-                </tr>
-            }
-    
-        </tbody>
-    </table>
-}
+<table class="table table-hover mt-3" style="cursor: pointer;">
+    <thead>
+        <tr>
+            <th style="width: 40%;">Šifra merilnega mesta</th>
+            <th style="width: 20%;">Energent</th>
+            <th style="width: 30%;">Dobavitelj</th>
+            <th style="width: 10%;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (merMesto of merilnaMesta; track $index) {
+        <tr (click)="onMerilnoMestoSelected(merMesto)">
+            <td>{{merMesto.stMerilnegaMesta}}</td>
+            <td>{{merMesto.energentTip}}</td>
+            <td>{{merMesto.dobavitelj}}</td>
+            <td>
+                <div>
+                    <i class="fa fa-bar-chart me-2" aria-hidden="true" style="color: blueviolet;">
+                    </i>
+                    <!-- <img src="stavbeService.stavbaSignal()?.photoUrl || './assets/gas.png'"> -->
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<hr>
+<div id="collapseBasic" [collapse]="!isCollapsed">
+    <div class="d-flex well well-lg card card-block card-header">
+        <app-echart-graf [selectedMerilnoMestoGraf]="selectedMerilnoMestoGraf"></app-echart-graf>
+    </div>
+</div>
 
+}

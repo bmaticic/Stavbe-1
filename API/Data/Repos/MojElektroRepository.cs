@@ -1,5 +1,6 @@
 using System;
 using API.Entities.MojElektro;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,4 +37,21 @@ public class MojElektroRepository(DataContext context) : IMojElektroRepository
             .ToArray();
     }
 
+    public async Task<Egraf> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator)
+    {
+        var mmesto = await context.MojElektroMerilnaMesta
+            .Where(x => x.EnotniIdentifikator == enotniIdentifikator)
+            .Include(x => x.Meritve15min)
+            .SingleOrDefaultAsync();
+        if (mmesto == null || mmesto.Meritve15min?.Count == 0) return new Egraf();
+
+        var vrednosti = mmesto.Meritve15min?.Select(x => x.Energija_A_plus).ToList();
+        var axisXLabele = mmesto.Meritve15min?.Select(x => x.TimeStamp).ToList();
+
+        return new Egraf
+        {
+            Vrednosti = vrednosti?.ToList(), // Prvih 96 vrednosti
+            AxisXLabele = axisXLabele?.ToList(), // Prvih 96 časovnih oznak
+        };
+    }
 }

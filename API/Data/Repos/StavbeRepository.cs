@@ -54,6 +54,25 @@ public class StavbeRepository(DataContext context, IMapper mapper) : IStavbeRepo
         return mapper.Map<MerilnoMestoDto[]>(stavba.MerilnaMesta);
     }
 
+    public async Task<Egraf> GetPodatkeZaMerilnoMesto(string stMerilnegaMesta)
+    {
+        var merilnoMesto = await context.MerilnaMesta
+            .Where(x => x.StMerilnegaMesta == stMerilnegaMesta)
+            .Include(x => x.Odcitki)
+            .SingleOrDefaultAsync();
+
+        if (merilnoMesto == null || merilnoMesto.Odcitki?.Count == 0) return new Egraf();
+
+        var vrednosti = merilnoMesto.Odcitki?.Select(x => x.Znesek).ToList();
+        var axisXLabele = merilnoMesto.Odcitki?.Select(x => x.LetoMesec).ToList();
+
+        return new Egraf
+        {
+            Vrednosti = vrednosti,
+            AxisXLabeleStr = axisXLabele,
+        };
+    }
+
 
     public async Task<Poligon> GetGeoTocke(string nazivStavbe)
     {

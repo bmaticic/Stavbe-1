@@ -32,7 +32,7 @@ public class StavbeController(IStavbeRepository stavbeRepository, IMapper mapper
         return stavba;
     }
 
-    // merilna mesta stavbe
+    // merilna mesta za stavbo
     [HttpGet("merilna-mesta/{nazivStavbe}")]
 
     public async Task<ActionResult<MerilnoMestoDto[]>> GetMerilnaMesta(string nazivStavbe)
@@ -40,6 +40,15 @@ public class StavbeController(IStavbeRepository stavbeRepository, IMapper mapper
         var merMesta = await stavbeRepository.GetMerilnaMesta(nazivStavbe);
         if (merMesta == null) return NotFound();
         return Ok(merMesta);
+    }
+
+    // Meritve pripravljene za egraf
+    [HttpGet("merilno-mesto/{stMerilnegaMesta}")]
+    public async Task<ActionResult<Egraf>> GetPodatkeZaMerilnoMesto(string stMerilnegaMesta)
+    {
+        var merMesto = await stavbeRepository.GetPodatkeZaMerilnoMesto(stMerilnegaMesta);
+        if (merMesto == null) return NotFound();
+        return Ok(merMesto);
     }
 
 

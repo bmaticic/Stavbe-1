@@ -9,6 +9,7 @@ import { StavbaParams } from '../_models/stavbaParams';
 import { MerilnoMesto } from '../_models/merilno-mesto';
 import { Ipoligon } from '../_models/poligon';
 import { MojElektroMerilnoMesto } from '../_models/MojElektroMerilnoMesto';
+import { Egraf } from '../_models/egraf';
 @Injectable({
   providedIn: 'root'
 })
@@ -68,6 +69,10 @@ export class StavbeService {
         })
       )
     return 0
+  }
+
+  getPodatkeZaMerilnoMesto(stMerilnegaMesta: string) {
+    return this.http.get<Egraf>(this.baseUrl + 'stavbe/merilno-mesto/' + stMerilnegaMesta);
   }
 
 

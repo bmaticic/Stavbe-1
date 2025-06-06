@@ -13,7 +13,7 @@
     </thead>
     <tbody>
         @for (merMesto of mojElektroMerilnaMesta; track $index) {
-        <tr>
+        <tr (click)="onMerilnoMestoSelected(merMesto)">
             <td>{{merMesto.enotniIdentifikator}}</td>
             <td>{{merMesto.gsrnMM}}</td>
             <td>{{merMesto.naziv}}</td>
@@ -24,12 +24,14 @@
     </tbody>
 </table>
 <div>
-    <i class="fa fa-bar-chart me-2" aria-hidden="true" style="color: blueviolet;" (click)="isCollapsed = !isCollapsed"
-        [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic">
+    <i class="fa fa-bar-chart me-2" aria-hidden="true" style="color: blueviolet;" 
+        (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic">
     </i>
     <hr>
     <div id="collapseBasic" [collapse]="!isCollapsed">
-        <div class="well well-lg card card-block card-header">Some content</div>
+        <div class="well well-lg card card-block card-header">
+            <app-echart-graf [selectedMerilnoMestoGraf]="selectedMerilnoMestoGraf" ></app-echart-graf>
+        </div>
     </div>
 </div>
 
