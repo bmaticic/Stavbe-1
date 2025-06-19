@@ -38,8 +38,9 @@ export class StavbaDetailComponent {
   
     loadStavba() {
       const naziv = this.route.snapshot.paramMap.get('naziv');
+      console.log("test stavba detail loadstavba" + naziv);
+
       if (!naziv) return;
-      console.log("test " + naziv);
 
       this.stavbeService.getStavbaPoNazivu(naziv).subscribe({
         next: stavba => {

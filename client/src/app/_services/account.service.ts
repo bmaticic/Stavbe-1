@@ -15,14 +15,14 @@ export class AccountService {
   // private presenceService = inject(PresenceService);
   baseUrl = environment.apiUrl;
   currentUser = signal<User | null>(null);
-  // roles = computed(() => {
-  //   const user = this.currentUser();
-  //   if (user && user.token) {
-  //     const role = JSON.parse(atob(user.token.split('.')[1])).role;
-  //     return Array.isArray(role) ? role : [role];
-  //   }
-  //   return [];
-  // })
+  roles = computed(() => {
+    const user = this.currentUser();
+    if (user && user.token) {
+      const role = JSON.parse(atob(user.token.split('.')[1])).role;
+      return Array.isArray(role) ? role : [role];
+    }
+    return [];
+  })
 
   login(model:any) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(

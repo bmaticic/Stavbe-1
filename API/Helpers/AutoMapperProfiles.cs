@@ -19,8 +19,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<PhotoStavbe, PhotoDto>();
 
         CreateMap<MemberUpdateDto, AppUser>();
-        CreateMap<StavbaUpdateDto, Stavba>();
+        CreateMap<RegisterDto, AppUser>();
+        CreateMap<string, DateOnly>().ConvertUsing(s => DateOnly.Parse(s));
 
+        CreateMap<StavbaUpdateDto, Stavba>();
         CreateMap<Stavba, StavbaDto>()
             .ForMember(s => s.PhotoUrl, d =>
                  d.MapFrom(s => s.PhotosStavbe.FirstOrDefault(x => x.IsMain)!.Url));

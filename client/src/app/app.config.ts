@@ -8,6 +8,7 @@ import { errorInterceptor } from './_interceptors/error.interceptor';
 import { jwtInterceptor } from './_interceptors/jwt.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { loadingInterceptor } from './_interceptors/loading.interceptor';
+import { ModalModule, BsModalService } from 'ngx-bootstrap/modal';
 
 import {  LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
@@ -24,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideToastr( {
       positionClass: 'toast-bottom-right'
     }),
-    importProvidersFrom(NgxSpinnerModule),
+    importProvidersFrom(NgxSpinnerModule, ModalModule.forRoot()),
     { provide: LOCALE_ID, useValue: 'sl' },
   ]
 };

@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace API.Data.Migrations
+namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250428072450_SqlInitial")]
-    partial class SqlInitial
+    [Migration("20250610152642_NovaPriIdentity")]
+    partial class NovaPriIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,36 @@ namespace API.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("API.Entities.AppRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {
                     b.Property<int>("Id")
@@ -33,8 +63,15 @@ namespace API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("City")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
@@ -46,6 +83,13 @@ namespace API.Data.Migrations
 
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -64,24 +108,68 @@ namespace API.Data.Migrations
                     b.Property<DateTime>("LastActive")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("LookingFor")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("API.Entities.AppUserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.GeoTocka", b =>
@@ -226,6 +314,135 @@ namespace API.Data.Migrations
                     b.HasIndex("IdStavbe");
 
                     b.ToTable("MerilnaMesta");
+                });
+
+            modelBuilder.Entity("API.Entities.MojElektro.MojElektro15MinMeritev", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Blok")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Energija_A_minus")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<decimal>("Energija_A_plus")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<decimal>("Energija_R_minus")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<decimal>("Energija_R_plus")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<int>("IdMerilnegaMesta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdMerilnegaMestaMojElektro")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Leto")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LetoDanUra")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LetoMesec")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LetoMesecBlok")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LetoTedenDan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LetoTedenDanUra")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Mesec")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("OddanaDelovnaMoc")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<decimal>("OddanaJalovaMoc")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<decimal>("PrejetaDelovnaMoc")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<decimal>("PrejetaJalovaMoc")
+                        .HasColumnType("decimal(7,4)");
+
+                    b.Property<string>("StMerilnegaMesta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdMerilnegaMestaMojElektro");
+
+                    b.ToTable("MojElektro15MinMeritve");
+                });
+
+            modelBuilder.Entity("API.Entities.MojElektro.MojElektroMerilnoMesto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Dobavitelj")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnotniIdentifikator")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GsrnMM")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdJavnegaObjekta")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NNizvod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Naslov")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Naziv")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NazivJavnegaObjekta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SNizvod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SifraJavnegaObjekta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdJavnegaObjekta");
+
+                    b.ToTable("MojElektroMerilnaMesta");
                 });
 
             modelBuilder.Entity("API.Entities.Odcitek", b =>
@@ -597,6 +814,113 @@ namespace API.Data.Migrations
                     b.ToTable("Stavbe");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("API.Entities.AppUserRole", b =>
+                {
+                    b.HasOne("API.Entities.AppRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.AppUser", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("API.Entities.GeoTocka", b =>
                 {
                     b.HasOne("API.Entities.Stavba", "Stavba")
@@ -613,6 +937,28 @@ namespace API.Data.Migrations
                     b.HasOne("API.Entities.Stavba", "Stavba")
                         .WithMany("MerilnaMesta")
                         .HasForeignKey("IdStavbe")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Stavba");
+                });
+
+            modelBuilder.Entity("API.Entities.MojElektro.MojElektro15MinMeritev", b =>
+                {
+                    b.HasOne("API.Entities.MojElektro.MojElektroMerilnoMesto", "MerilnoMestoMojElektro")
+                        .WithMany("Meritve15min")
+                        .HasForeignKey("IdMerilnegaMestaMojElektro")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MerilnoMestoMojElektro");
+                });
+
+            modelBuilder.Entity("API.Entities.MojElektro.MojElektroMerilnoMesto", b =>
+                {
+                    b.HasOne("API.Entities.Stavba", "Stavba")
+                        .WithMany("MojElektroMerilnaMesta")
+                        .HasForeignKey("IdJavnegaObjekta")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -652,9 +998,52 @@ namespace API.Data.Migrations
                     b.Navigation("Stavba");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.HasOne("API.Entities.AppRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.HasOne("API.Entities.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.HasOne("API.Entities.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.HasOne("API.Entities.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("API.Entities.AppRole", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {
                     b.Navigation("Photos");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("API.Entities.MerilnoMesto", b =>
@@ -662,11 +1051,18 @@ namespace API.Data.Migrations
                     b.Navigation("Odcitki");
                 });
 
+            modelBuilder.Entity("API.Entities.MojElektro.MojElektroMerilnoMesto", b =>
+                {
+                    b.Navigation("Meritve15min");
+                });
+
             modelBuilder.Entity("API.Entities.Stavba", b =>
                 {
                     b.Navigation("GeoTocke");
 
                     b.Navigation("MerilnaMesta");
+
+                    b.Navigation("MojElektroMerilnaMesta");
 
                     b.Navigation("PhotosStavbe");
                 });

@@ -24,7 +24,6 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
         Response.AddPaginationHeader(users);
         return Ok(users);
     }
-    [Authorize]
     [HttpGet("{username}")]
     public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
