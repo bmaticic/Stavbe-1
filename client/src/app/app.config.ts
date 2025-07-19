@@ -9,11 +9,17 @@ import { jwtInterceptor } from './_interceptors/jwt.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { loadingInterceptor } from './_interceptors/loading.interceptor';
 import { ModalModule, BsModalService } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule, BsLocaleService } from 'ngx-bootstrap/datepicker';
 
 import {  LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeSi from '@angular/common/locales/sl';
 registerLocaleData(localeSi);
+
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { slLocale } from 'ngx-bootstrap/locale';
+defineLocale('sl', slLocale);
+
 
 
 
@@ -25,7 +31,8 @@ export const appConfig: ApplicationConfig = {
     provideToastr( {
       positionClass: 'toast-bottom-right'
     }),
-    importProvidersFrom(NgxSpinnerModule, ModalModule.forRoot()),
+    importProvidersFrom(NgxSpinnerModule, BsDatepickerModule.forRoot(), ModalModule.forRoot()),
     { provide: LOCALE_ID, useValue: 'sl' },
+    
   ]
 };

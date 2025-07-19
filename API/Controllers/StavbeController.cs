@@ -62,7 +62,6 @@ public class StavbeController(IStavbeRepository stavbeRepository, IMapper mapper
     }
 
 
-
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Stavba>> GetStavba(int id)
     {

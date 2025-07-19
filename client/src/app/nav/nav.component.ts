@@ -22,7 +22,7 @@ export class NavComponent {
   login() {
     this.accountService.login(this.model).subscribe({
       next: _ => {
-        this.router.navigateByUrl("/members");
+        this.router.navigateByUrl("/stavbe");
       },
      error: error => this.toastr.error(error.error)
     })

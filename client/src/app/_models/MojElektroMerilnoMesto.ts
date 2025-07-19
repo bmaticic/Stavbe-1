@@ -1,7 +1,12 @@
+import { Photo } from "./photo"
+import { Stavba } from "./stavba"
+
 export interface MojElektroMerilnoMesto {
   enotniIdentifikator: string
   sifraJavnegaObjekta: string
   nazivJavnegaObjekta: string
+  photoUrl: string     // slika stavbe
+
   gsrnMM: string
   naziv: string
   naslov: string
@@ -11,6 +16,7 @@ export interface MojElektroMerilnoMesto {
   nNizvod: string
   dobavitelj: string
   idJavnegaObjekta: number
-  stavba: any
-  meritve15min: any
+  stavba: Stavba
+  photoStavbe: Photo
+  meritve15min: any[]
 }

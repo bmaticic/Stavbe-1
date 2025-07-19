@@ -33,7 +33,7 @@ export class StavbaDetailComponent {
       
       this.loadStavba();
       if(!this.stavba) return;
-      this.stavbeService.stavbaNaziv.set(this.stavba.naziv);
+ //     this.stavbeService.stavbaNaziv.set(this.stavba.naziv);
     }
   
     loadStavba() {
@@ -46,6 +46,7 @@ export class StavbaDetailComponent {
         next: stavba => {
           this.stavba = stavba;
           this.stavbeService.stavbaNaziv.set(stavba.naziv);
+          this.stavbeService.stavbaSignal.set(stavba);
 
           stavba.photosStavbe.map(p => {
             this.images.push(new ImageItem({ src: p.url, thumb: p.url }));

@@ -1,0 +1,59 @@
+@if (mojElektroMerilnoMesto) {
+<div class="row">
+    <table class="table mt-3" style="cursor: pointer;">
+        <thead>
+            <tr>
+                <th style="width: 20%;">Stavba</th>
+                <th style="width: 10%;">Enotni Identifikator</th>
+                <th style="width: 10%;">GsrnMM</th>
+                <th style="width: 20%;">Naziv</th>
+                <th style="width: 20%;">Dobavitelj</th>
+                <th style="width: 10%;">RTP</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <img src="{{ mojElektroMerilnoMesto.photoUrl}}" alt="{{mojElektroMerilnoMesto.sifraJavnegaObjekta}}"
+                        class="img-moj-ele" />
+                    {{mojElektroMerilnoMesto.nazivJavnegaObjekta}}
+                </td>
+                <td>{{mojElektroMerilnoMesto.enotniIdentifikator}}</td>
+                <td>{{mojElektroMerilnoMesto.gsrnMM}}</td>
+                <td>{{mojElektroMerilnoMesto.naziv}}</td>
+                <td>{{mojElektroMerilnoMesto.dobavitelj}}</td>
+                <td>{{mojElektroMerilnoMesto.rtp}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<tabset class="member-tabset">
+    <tab heading="Dnevne količine" [active]="true">
+        <h4>Dnevne količine za merilno mesto {{mojElektroMerilnoMesto.enotniIdentifikator}}</h4>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+            <input type="text" class="form-control"
+                placeholder="{{selectedRange.value[0]}}  -- {{selectedRange.value[1]}}" 
+                bsDaterangepicker
+                [bsConfig]="{ ranges: ranges , dateInputFormat: 'dd/MM/yyyy'}" 
+                [(ngModel)]="selectedRange">
+        </div>
+        <!-- Add your map component here -->
+    </tab>
+    
+    <tab heading="15min podatki">
+        <!-- Add your map component here -->
+    </tab>
+    <tab heading="15min podatki po časovnih blokih">
+        <!-- Add your map component here -->
+    </tab>
+    <tab heading="Časovna porazdelitev po letih">
+        <!-- Add your map component here -->
+    </tab>
+
+
+</tabset>
+
+
+}

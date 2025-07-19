@@ -1,6 +1,7 @@
 using System;
 using API.DTOs;
 using API.Entities;
+using API.Entities.MojElektro;
 using API.Extensions;
 using AutoMapper;
 
@@ -29,5 +30,11 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<MerilnoMesto, MerilnoMestoDto>();
         CreateMap<GeoTocka, GeoTockaDto>();
+
+        CreateMap<MojElektroMerilnoMesto, MojElektroMerilnoMestoDto>()
+            .ForMember(d => d.PhotoUrl, o =>
+                o.MapFrom(s => s.Stavba!.PhotosStavbe.FirstOrDefault(x => x.IsMain)!.Url))
+            .ForMember(d => d.IdJavnegaObjekta, o =>
+                o.MapFrom(s => s.Stavba!.Id)); 
     }
 }

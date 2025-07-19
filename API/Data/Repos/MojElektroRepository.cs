@@ -1,12 +1,15 @@
 using System;
+using System.Linq;
+using API.DTOs;
 using API.Entities.MojElektro;
 using API.Helpers;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data.Repos;
 
-public class MojElektroRepository(DataContext context) : IMojElektroRepository
+public class MojElektroRepository(DataContext context, IMapper mapper) : IMojElektroRepository
 {
     public async Task<MojElektroMerilnoMesto[]> GetMojElektroMerilnaMesta(string nazivStavbe)
     {
@@ -54,4 +57,27 @@ public class MojElektroRepository(DataContext context) : IMojElektroRepository
             AxisXLabele = axisXLabele?.ToList(), // Prvih 96 časovnih oznak
         };
     }
+
+    public async Task<MojElektroMerilnoMestoDto[]> GetVsaMojElektroMerilnaMesta()
+    {
+        var mmesta = await context.MojElektroMerilnaMesta
+        .Include(x => x.Stavba)
+        .Include(x => x.Stavba!.PhotosStavbe)
+        .ToArrayAsync();
+        if (mmesta == null || mmesta.Length == 0) return Array.Empty<MojElektroMerilnoMestoDto>();
+
+        return mapper.Map<MojElektroMerilnoMestoDto[]>(mmesta);
+    }
+
+    public async Task<MojElektroMerilnoMestoDto> GetMojElektroMerilnoMesto(string enotniIdentifikator)
+    {
+        var mmesto = await context.MojElektroMerilnaMesta
+        .Where(x => x.EnotniIdentifikator == enotniIdentifikator)
+        .Include(x => x.Stavba)
+        .Include(x => x.Stavba!.PhotosStavbe)
+        .SingleOrDefaultAsync();
+        if (mmesto == null ) return new MojElektroMerilnoMestoDto();
+        return mapper.Map<MojElektroMerilnoMestoDto>(mmesto);
+    }
+
 }

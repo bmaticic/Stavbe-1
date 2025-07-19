@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
-import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 
 import { authGuard } from './_guards/auth.guard';
@@ -16,38 +15,49 @@ import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.gu
 import { StavbaEditComponent } from './stavbe/stavba-edit/stavba-edit.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { adminGuard } from './_guards/admin.guard';
+import { MojElektroListComponent } from './moj-elektro/moj-elektro-list/moj-elektro-list.component';
+import { MojElektroCardComponent } from './moj-elektro/moj-elektro-card/moj-elektro-card.component';
 // import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 // import { memberDetailedResolver } from './_resolvers/member-detailed.resolver';
 // import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 // import { adminGuard } from './_guards/admin.guard';
 
 export const routes: Routes = [
-    {path: '', component: HomeComponent},
+    { path: '', component: HomeComponent },
     {
         path: '',
         runGuardsAndResolvers: 'always',
         canActivate: [authGuard],
         children: [
-            {path: 'stavbe', component: StavbeListComponent},
-            {path: 'stavbe/:naziv', component: StavbaDetailComponent},
-            {path: 'stavba/edit', component: StavbaEditComponent,
-                canDeactivate: [preventUnsavedChangesGuard]}, 
+            { path: 'stavbe', component: StavbeListComponent },
+            { path: 'stavbe/:naziv', component: StavbaDetailComponent },
+            {
+                path: 'stavba/edit', component: StavbaEditComponent,
+                canDeactivate: [preventUnsavedChangesGuard]
+            },
 
-            {path: 'members', component: MemberListComponent},
-            {path: 'members/:username', component: MemberDetailComponent, 
+            { path: 'members', component: MemberListComponent },
+            {
+                path: 'members/:username', component: MemberDetailComponent,
                 // resolve: {member: memberDetailedResolver}
             },
-            {path: 'member/edit', component: MemberEditComponent, 
-                canDeactivate: [preventUnsavedChangesGuard]},
-            {path: 'lists', component: ListsComponent},
-            {path: 'messages', component: MessagesComponent},
-            {path: 'admin', component: AdminPanelComponent, canActivate: [adminGuard]}
+            {
+                path: 'member/edit', component: MemberEditComponent,
+                canDeactivate: [preventUnsavedChangesGuard]
+            },
+
+            { path: 'moj-elektro', component: MojElektroListComponent },
+            { path: 'moj-elektro/:enotniIdentifikator', component: MojElektroCardComponent },
+            { path: 'moj-elektro/edit', component: MojElektroCardComponent },
+
+            { path: 'messages', component: MessagesComponent },
+            { path: 'admin', component: AdminPanelComponent, canActivate: [adminGuard] }
         ]
     },
-    {path: 'errors', component: TestErrorsComponent},
-    {path: 'not-found', component: NotFoundComponent},
-    {path: 'server-error', component: ServerErrorComponent},
-    {path: '**', component: HomeComponent, pathMatch: 'full'}
+    { path: 'errors', component: TestErrorsComponent },
+    { path: 'not-found', component: NotFoundComponent },
+    { path: 'server-error', component: ServerErrorComponent },
+    { path: '**', component: HomeComponent, pathMatch: 'full' }
 ];
 
 
