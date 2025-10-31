@@ -8,15 +8,13 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MojElektroService } from '../../_services/moj-elektro.service';
 import { MojElektroMerilnoMesto } from '../../_models/MojElektroMerilnoMesto';
 import { FormsModule } from '@angular/forms';
-
-interface IRange {
-  value: Date[];
-  label: string;
-}
+import { EgrafDnevniComponent } from "../egraf-dnevni/egraf-dnevni.component";
+import { IRange } from '../../_models/i-range';
+import { MojElektroRead15Component } from '../moj-elektro-read15/moj-elektro-read15.component';
 
 @Component({
   selector: 'app-moj-elektro-card',
-  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule],  // RouterLink
+  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule, EgrafDnevniComponent, MojElektroRead15Component],  // RouterLink
   templateUrl: './moj-elektro-card.component.html',
   styleUrl: './moj-elektro-card.component.css'
 })
@@ -42,7 +40,7 @@ export class MojElektroCardComponent {
     label: 'Zadnjih 5 let'
   }
 
-];
+  ];
   selectedRange: IRange = this.ranges[0];
 
   ngOnInit(): void {
@@ -61,8 +59,19 @@ export class MojElektroCardComponent {
       next: merilnoMesto => {
         this.mojElektroMerilnoMesto = merilnoMesto;
         this.mojElektroService.mojElektroSignal.set(merilnoMesto);
+        this.mojElektroService.selectedRangeSignal.set(this.selectedRange);
 
       }
     });
   }
+
+  // onValueChange($event: (Date | undefined)[] | undefined) {
+  //   if ($event && $event.length === 2) {
+  //     this.selectedRange.value = $event as Date[];
+  //     this.selectedRange.label = `${$event[0]?.toLocaleDateString()} - ${$event[1]?.toLocaleDateString()}`;
+  //     this.mojElektroService.selectedRangeSignal.set(this.selectedRange);
+
+  //   }
+  // }
+
 }

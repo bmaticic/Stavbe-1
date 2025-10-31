@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import { EChartsCoreOption } from 'echarts/core';
 // import echarts core
@@ -14,6 +14,7 @@ echarts.use([BarChart, LineChart, GridComponent, CanvasRenderer]);
 
 @Component({
   selector: 'app-echart-graf',
+    changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxEchartsDirective],
   templateUrl: './echart-graf.component.html',
   styleUrl: './echart-graf.component.css',

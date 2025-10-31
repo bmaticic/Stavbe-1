@@ -3,7 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Entities.MojElektro;
+using Microsoft.EntityFrameworkCore;
+
 [Table("MojElektro15MinMeritve")]
+[Index(nameof(StMerilnegaMesta), nameof(TimeStamp), IsUnique = false, Name = "IX_StMerilnegaMesta_TimeStamp")]
 public class MojElektro15MinMeritev
 {
     [Key]

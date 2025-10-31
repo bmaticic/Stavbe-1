@@ -1,0 +1,55 @@
+<p>Čitanje 15 min intervalov z eksterno Moj elektro api</p>
+<h4>
+  Čitanje 15 min intervalov z eksterno Moj elektro api za merilno mesto
+  : {{mojElektroService.mojElektroSignal()?.enotniIdentifikator}}
+  {{mojElektroService.mojElektroSignal()?.nazivJavnegaObjekta}}
+</h4>
+
+<div class="row">
+  <div class="col-4">
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]=" form" (ngSubmit)="submit()">
+          <div class="form-group mb-2">
+            <label>Usage Point</label>
+            <input formControlName="usagePoint" class="form-control mx-2" />
+          </div>
+          <div class="d-flex" allign-items-center>
+            <div class="form-group mb-2">
+              <label>Start Time</label>
+              <input formControlName="startTime" class="form-control mx-2" type="date" />
+            </div>
+            <div class="form-group mb-2">
+              <label>End Time</label>
+              <input formControlName="endTime" class="form-control mx-2" type="date" />
+            </div>
+
+          </div>
+          <div class="form-group mb-2">
+            <label>Option</label>
+            <input formControlName="option" class="form-control mx-2" />
+          </div>
+          <div class="form-group mb-2">
+            <label>API Token</label>
+            <input formControlName="apiToken" class="form-control mx-2" />
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">Pošlji</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@if (loading) {
+<div>Nalagam...</div>
+}
+@if (error) {
+<div class="text-danger">{{error}}</div>
+}
+@if (result) {
+<div>
+  <h5>Rezultat</h5>
+  <pre>{{ result | json }}</pre>
+</div>
+}

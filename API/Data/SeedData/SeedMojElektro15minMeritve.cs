@@ -12,7 +12,6 @@ public class SeedMojElektro15minMeritve
     {
         CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
-        if (await context.MojElektro15MinMeritve.AnyAsync()) return;
 
         Calendar koledar = currentCulture.Calendar; // System.Globalization.GregorianCalendar
 
@@ -38,6 +37,9 @@ public class SeedMojElektro15minMeritve
         Dictionary<string, int> seznamNeuvrscenihMerilnihMest = new Dictionary<string, int>();
 
         var path = "Data/Source/MojElektro/15minMeritve2022-2023.xlsx";
+        // var path = "Data/Source/MojElektro/3-141747-15minMeritve2024-2025.xlsx";
+        // var path = "Data/Source/MojElektro/3-144174-15minMeritve2025-01-01-2025-09-13.xlsx";
+
 
         using var stream = System.IO.File.OpenRead(path);
         using var excelPackage = new ExcelPackage(stream);
@@ -60,8 +62,8 @@ public class SeedMojElektro15minMeritve
             koloneDict.Add(prvaVrsta[1, i].GetValue<string>(), i);
         }
 
-        // za testiranje
-        int testniI = 0;
+
+        int testniI = 0;    // pri 10000 naredim save changes
 
         for (int nRow = 2; nRow <= nEndRow; nRow++)
         {
@@ -70,20 +72,38 @@ public class SeedMojElektro15minMeritve
 
             if (row[nRow, koloneDict["Status odčitka A+"]].GetValue<string>() != null)
                 continue;
+            if (row[nRow, koloneDict["Status odčitka A-"]].GetValue<string>() != null)
+                continue;
+            if (row[nRow, koloneDict["Status odčitka R+"]].GetValue<string>() != null)
+                continue;
+            if (row[nRow, koloneDict["Status odčitka R-"]].GetValue<string>() != null)
+                continue;
+
+
+            // if (await context.MojElektro15MinMeritve.AnyAsync()) return;
+
+            var indexPrvi = row[nRow, koloneDict["Merilno mesto"]].GetValue<string>();
+            var indexDrugi = row[nRow, koloneDict["Časovna značka"]].GetValue<DateTime>();
+            // DateTime indexDrugi;
+            // if (!DateTime.TryParse(indexDrugiStr, out indexDrugi))
+            // {
+            //     Console.WriteLine($"Neveljaven datum: {indexDrugiStr}");
+            //     continue;
+            // }
+
+            if (!seznamMerMest.ContainsKey(indexPrvi)) continue;
+
+            if (await context.MojElektro15MinMeritve.AnyAsync(x => x.StMerilnegaMesta == indexPrvi && x.TimeStamp == indexDrugi))
+            {
+                // Console.WriteLine("Meritev že obstaja: " + indexPrvi + " " + indexDrugi);
+                steviloNeuspelih++;
+                continue;
+            }
 
 
             var _meritev = new MojElektro15MinMeritev();
 
-            var pom = row[nRow, koloneDict["Merilno mesto"]].GetValue<string>();
-            if (seznamMerMest.ContainsKey(pom))
-            {
-                _meritev.StMerilnegaMesta = pom;
-            }
-            else
-            {
-                Console.WriteLine("Merilno mesto ne obstaja: " + pom);
-                continue;
-            }
+            _meritev.StMerilnegaMesta = row[nRow, koloneDict["Merilno mesto"]].GetValue<string>();
             _meritev.IdMerilnegaMesta = seznamMerMest[_meritev.StMerilnegaMesta];
             _meritev.IdMerilnegaMestaMojElektro = _meritev.IdMerilnegaMesta;
 
@@ -128,11 +148,13 @@ public class SeedMojElektro15minMeritve
 
 
             await context.MojElektro15MinMeritve.AddAsync(_meritev);
+            // await context.SaveChangesAsync();
 
-            // za test !!!!!!
-            if (testniI > 30000)
+            // shranimo po 10000 zapisih !!!!!!
+            if (testniI > 5000)
             {
-                await context.SaveChangesAsync();
+                var a = await context.SaveChangesAsync();
+                Console.WriteLine("shranjenih " + a.ToString() + " zapisov");
                 testniI = 0;
             }
             else testniI++;
@@ -140,8 +162,8 @@ public class SeedMojElektro15minMeritve
             steviloDodanihMeritev++;
             //   Console.WriteLine("dodan record " + steviloDodanihMeritev.ToString("0000") + " " + _meritev.LetoTedenDan);
         }
-        if (steviloDodanihMeritev > 0)
-            await context.SaveChangesAsync();
+        // if (steviloDodanihMeritev > 0)
+        //     await context.SaveChangesAsync();
 
         Console.WriteLine($"Dodano {steviloDodanihMeritev} steviloDodanihMeritev");
         Console.WriteLine($"Neuspešno dodanih {steviloNeuspelih} steviloNeuspelih.");

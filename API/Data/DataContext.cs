@@ -22,8 +22,6 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, 
     {
         base.OnModelCreating(builder);
 
-        base.OnModelCreating(builder);
-
 
         builder.Entity<AppUser>()
             .HasMany(ur => ur.UserRoles)

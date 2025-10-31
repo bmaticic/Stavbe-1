@@ -9,7 +9,7 @@ public class SeedMojElektroMMesta
 {
     public static async Task ImportMM(DataContext context)
     {
-        if (await context.MojElektroMerilnaMesta.AnyAsync()) return;
+       // if (await context.MojElektroMerilnaMesta.AnyAsync()) return;
 
         // var steviloDodanihMerMest = 0;
 

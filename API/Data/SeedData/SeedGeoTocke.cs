@@ -11,7 +11,7 @@ public class SeedGeoTocke
 
     public static async Task ImportGeo(DataContext context)
     {
-        if (await context.GeoTocke.AnyAsync()) return;
+       // if (await context.GeoTocke.AnyAsync()) return;
 
         Dictionary<string, int> seznamStavb = new Dictionary<string, int>();
         foreach (Stavba stavba in context.Stavbe)
@@ -47,7 +47,12 @@ public class SeedGeoTocke
         {
             var row = worksheet.Cells[
                     nRow, 1, nRow, worksheet.Dimension.End.Column];
-
+            
+            var index = row[nRow, koloneDict["Ozn_obj"]].GetValue<string>();
+            if (await context.GeoTocke.AnyAsync(x => x.SifraObjekta == index))
+            {
+                continue;
+            }
             var _geoTocka = new GeoTocka();
 
             _geoTocka.FID = row[nRow, koloneDict["FID"]].GetValue<int>();

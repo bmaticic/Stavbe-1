@@ -1,13 +1,13 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { MapPolygon} from '@angular/google-maps';
+import { MapPolygon } from '@angular/google-maps';
 import { StavbeService } from '../../_services/stavbe.service';
 import { Ipoligon, Itocka } from '../../_models/poligon';
 import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-poligon',
-  imports: [ GoogleMap, MapPolygon, NgFor],
+  imports: [GoogleMap, MapPolygon, NgFor],
   templateUrl: './poligon.component.html',
   styleUrl: './poligon.component.css'
 })
@@ -15,6 +15,10 @@ export class PoligonComponent implements OnInit {
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
   @ViewChild(MapInfoWindow, { static: false }) info!: MapInfoWindow;
   @ViewChild(MapMarker, { static: false }) marker!: MapMarker;
+
+  clickedLat: number | null = null;
+  clickedLng: number | null = null;
+
 
   stavbeService = inject(StavbeService);
   poligon?: Ipoligon;
@@ -28,8 +32,8 @@ export class PoligonComponent implements OnInit {
 
   options: google.maps.MapOptions = {
 
-    zoomControl: false,
-    scrollwheel: false,
+    zoomControl: true,
+    scrollwheel: true,
     disableDoubleClickZoom: true,
     mapTypeId: 'roadmap',
     // maxZoom: 25,
@@ -50,9 +54,15 @@ export class PoligonComponent implements OnInit {
 
   ngOnInit(): void {
     //this.center = new google.maps.LatLng({ lat: 46.22383, lng: 14.61013 }); // Kamnik 46,22383  14.61013
-    while(this.vsiPoligoni.length) { this.vsiPoligoni.pop(); }
+    while (this.vsiPoligoni.length) { this.vsiPoligoni.pop(); }
 
     this.loadGeoTocke();
+  }
+
+    onMapClick(event: any) {
+    // For Google Maps JS API, event.latLng.lat() and event.latLng.lng()
+    this.clickedLat = event.latLng.lat();
+    this.clickedLng = event.latLng.lng();
   }
 
   // Add this helper function to transform Itocka[][] to LatLngLiteral[]
@@ -71,13 +81,13 @@ export class PoligonComponent implements OnInit {
         this.poligon = poligon;
         this.poligon!.noviObodiLatLng = this.transformToLatLngLiteral(poligon.noviObodiObjekta);
         this.center = poligon.center; // Assuming poligon has a center property of type google.maps.LatLng
-  //      this.center = new google.maps.LatLng(poligon!.center.lat(), poligon!.center.lng());
+        //      this.center = new google.maps.LatLng(poligon!.center.lat(), poligon!.center.lng());
         this.vsiPoligoni = [...this.vsiPoligoni, poligon];
 
       },
       error: (error) => {
         console.log(error);
-      }, 
+      },
       complete: () => {
         console.log('GeoTocke loaded successfully!' + this.vsiPoligoni.length);
         this.vsiPoligoni.forEach((poligon) => {

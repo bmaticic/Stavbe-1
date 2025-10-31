@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250610152642_NovaPriIdentity")]
-    partial class NovaPriIdentity
+    [Migration("20250918124258_Zacetna")]
+    partial class Zacetna
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -380,7 +380,7 @@ namespace API.Migrations
 
                     b.Property<string>("StMerilnegaMesta")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
@@ -388,6 +388,8 @@ namespace API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdMerilnegaMestaMojElektro");
+
+                    b.HasIndex(new[] { "StMerilnegaMesta", "TimeStamp" }, "IX_StMerilnegaMesta_TimeStamp");
 
                     b.ToTable("MojElektro15MinMeritve");
                 });

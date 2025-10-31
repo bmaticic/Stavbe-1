@@ -43,15 +43,16 @@ try
 {
     var context = services.GetRequiredService<DataContext>();
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
-    var roleManager =services.GetRequiredService<RoleManager<AppRole>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
     await Seed.SeedUsers(userManager, roleManager);
-    await SeedStavbe.Seed(context);
-    await SeedMerilnaMesta.ImportMM(context);
-    await SeedGeoTocke.ImportGeo(context);
-    await SeedMojElektroMMesta.ImportMM(context);
-    await SeedMojElektro15minMeritve.Import15minMeritve(context);
-    await SeedOdcitki.ImportElektro(context);
+    // await SeedStavbe.Seed(context);
+    // await SeedMerilnaMesta.ImportMM(context);
+    // await SeedMojElektroMMesta.ImportMM(context);
+
+    // await SeedGeoTocke.ImportGeo(context);
+    // await SeedMojElektro15minMeritve.Import15minMeritve(context);
+    // await SeedOdcitki.ImportElektro(context);
 }
 catch (Exception ex)
 {

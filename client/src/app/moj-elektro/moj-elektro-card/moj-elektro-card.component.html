@@ -31,17 +31,20 @@
 
 <tabset class="member-tabset">
     <tab heading="Dnevne količine" [active]="true">
-        <h4>Dnevne količine za merilno mesto {{mojElektroMerilnoMesto.enotniIdentifikator}}</h4>
-        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+        <!-- <h4>Dnevne količine za merilno mesto {{mojElektroMerilnoMesto.enotniIdentifikator}}</h4> -->
+
+        <!-- <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
             <input type="text" class="form-control"
                 placeholder="{{selectedRange.value[0]}}  -- {{selectedRange.value[1]}}" 
                 bsDaterangepicker
-                [bsConfig]="{ ranges: ranges , dateInputFormat: 'dd/MM/yyyy'}" 
+                (bsValueChange)="onValueChange($event)" [bsConfig]="{ ranges: ranges , dateInputFormat: 'dd/MM/yyyy'}"
                 [(ngModel)]="selectedRange">
         </div>
-        <!-- Add your map component here -->
+ -->
+
+        <app-egraf-dnevni></app-egraf-dnevni>
     </tab>
-    
+
     <tab heading="15min podatki">
         <!-- Add your map component here -->
     </tab>
@@ -51,6 +54,12 @@
     <tab heading="Časovna porazdelitev po letih">
         <!-- Add your map component here -->
     </tab>
+
+    <tab heading="Dostop do zunanje aplikacije Moj-elektro">
+        <h4>Dostop do zunanje app Moj-elektro za merilno mesto {{mojElektroMerilnoMesto.enotniIdentifikator}}</h4>
+        <app-moj-elektro-read15></app-moj-elektro-read15>
+    </tab>
+
 
 
 </tabset>

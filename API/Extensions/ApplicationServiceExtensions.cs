@@ -32,6 +32,7 @@ public static class ApplicationServiceExtensions
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         // services.AddEndpointsApiExplorer();
         // services.AddSwaggerGen();
+        services.AddHttpClient<MojElektroApiService>();
 
         return services;
 

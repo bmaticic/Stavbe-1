@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class NovaPriIdentity : Migration
+    public partial class Zacetna : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -440,7 +440,7 @@ namespace API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StMerilnegaMesta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StMerilnegaMesta = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IdMerilnegaMesta = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Leto = table.Column<int>(type: "int", nullable: false),
@@ -525,6 +525,11 @@ namespace API.Migrations
                 name: "IX_MojElektro15MinMeritve_IdMerilnegaMestaMojElektro",
                 table: "MojElektro15MinMeritve",
                 column: "IdMerilnegaMestaMojElektro");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StMerilnegaMesta_TimeStamp",
+                table: "MojElektro15MinMeritve",
+                columns: new[] { "StMerilnegaMesta", "TimeStamp" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_MojElektroMerilnaMesta_IdJavnegaObjekta",

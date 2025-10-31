@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Entities;
 
 [Table("GeoTocke")]
+[Index(nameof(SifraObjekta), IsUnique = false, Name = "IX_SifraObjekta")]
 public class GeoTocka
 {
         [Key]

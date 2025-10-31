@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { MojElektroMerilnoMesto } from '../_models/MojElektroMerilnoMesto';
 import { Egraf } from '../_models/egraf';
+import { IRange } from '../_models/i-range';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class MojElektroService {
   baseUrl = environment.apiUrl;
 
   mojElektroSignal = signal<MojElektroMerilnoMesto | null>(null);
+  selectedRangeSignal = signal<IRange | null>(null);
 
   // moj-elektro merilna mesta za stavbo
   getMojElektroMerilnaMesta(naziv: string) {

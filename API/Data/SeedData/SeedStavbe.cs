@@ -11,7 +11,7 @@ public class SeedStavbe
 
     public static async Task Seed(DataContext context)
     {
-        if (await context.Stavbe.AnyAsync()) return;
+        // if (await context.Stavbe.AnyAsync()) return;
 
         var path = "Data/Source/JObjektiInMerilnaMesta.xlsx";
 
@@ -130,11 +130,12 @@ public class SeedStavbe
                 UpdatedDate = DateTime.Now,
             };
 
+            // if(nRow == 2)
+            // {
+            //     stavba.PhotosStavbe = fotke;
+            // }
+            
             // add the new to the DB context 
-            if(nRow == 2)
-            {
-                stavba.PhotosStavbe = fotke;
-            }
             await context.Stavbe.AddAsync(stavba);
 
             // store in our lookup to retrieve its Id later on
