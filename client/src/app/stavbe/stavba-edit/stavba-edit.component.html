@@ -58,42 +58,37 @@
                             <label>Id:</label>
                             <input type="text" 
                                 class="form-control mx-2" 
-                                name="Id" 
+                                name="id" 
                                 [(ngModel)]="stavba.id"
                                 >
 
                             <label>Naziv:</label>
                             <input type="text" 
                                 class="form-control mx-2" 
-                                name="Naziv" 
+                                name="naziv" 
                                 [(ngModel)]="stavba.naziv"
                                 >
-                            <label>Naslov:</label>
+
+                            <label>Ulica Hs:</label>
                             <input type="text" 
                                 class="form-control mx-2" 
-                                name="Naslov" 
-                                [(ngModel)]="stavba.naslov"
-                                >
-                                <label>Ulica Hs:</label>
-                                <input type="text" 
-                                    class="form-control mx-2" 
-                                    name="UlicaHs" 
-                                    [(ngModel)]="stavba.ulicaHs"
-                                >
-    
+                                name="ulicaHs" 
+                                [(ngModel)]="stavba.ulicaHs"
+                            >
+
                         </div>
 
                         <h4 class="mt-2">Naslov</h4>
                         <textarea 
                             class="form-control" 
-                            name="Naslov" 
+                            name="naslov" 
                             [(ngModel)]="stavba.naslov"
                             >
                         </textarea>
                         <h4 class="mt-2">Opombe</h4>
                         <textarea 
                             class="form-control" 
-                            name="Opomba" 
+                            name="opomba" 
                             [(ngModel)]="stavba.opomba"
                             >
                         </textarea>

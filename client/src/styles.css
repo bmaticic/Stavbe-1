@@ -3,6 +3,12 @@
     padding: 10px;
     border-radius: 4px;
   }
+
+/* Add 5px of spacing around the window */
+html, body, app-root {
+  padding: 5px;
+  box-sizing: border-box;
+}
   
   .nav-tabs > li.open, .member-tabset > .nav-tabs > li:hover {
     border-bottom: 4px solid #fbcdcf;

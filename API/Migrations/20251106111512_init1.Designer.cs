@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250918124258_Zacetna")]
-    partial class Zacetna
+    [Migration("20251106111512_init1")]
+    partial class init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -224,7 +224,7 @@ namespace API.Migrations
 
                     b.Property<string>("SifraObjekta")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("Zaporedje")
                         .HasColumnType("int");
@@ -232,6 +232,8 @@ namespace API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdJavnegaObjekta");
+
+                    b.HasIndex(new[] { "SifraObjekta" }, "IX_SifraObjekta");
 
                     b.ToTable("GeoTocke");
                 });

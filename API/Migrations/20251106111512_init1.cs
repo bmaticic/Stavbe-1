@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class Zacetna : Migration
+    public partial class init1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -243,7 +243,7 @@ namespace API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SifraObjekta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SifraObjekta = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SifraMerilnegaMesta = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Zaporedje = table.Column<int>(type: "int", nullable: true),
                     Lat = table.Column<decimal>(type: "decimal(9,6)", nullable: true),
@@ -515,6 +515,11 @@ namespace API.Migrations
                 name: "IX_GeoTocke_IdJavnegaObjekta",
                 table: "GeoTocke",
                 column: "IdJavnegaObjekta");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SifraObjekta",
+                table: "GeoTocke",
+                column: "SifraObjekta");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MerilnaMesta_IdStavbe",

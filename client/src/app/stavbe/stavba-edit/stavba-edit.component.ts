@@ -37,7 +37,8 @@ export class StavbaEditComponent implements OnInit {
   }
 
   updateStavba() {
-    this.stavbeService.updateStavba(this.editForm?.value).subscribe({
+    if (!this.stavba) return;
+    this.stavbeService.updateStavba(this.stavba).subscribe({
       next: _ => {
         this.toastr.success('Stavba updated successfully');
         this.editForm?.reset(this.stavba);

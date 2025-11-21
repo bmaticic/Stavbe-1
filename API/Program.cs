@@ -6,7 +6,6 @@ using API.Extensions;
 using API.Interfaces;
 using API.Middleware;
 using API.Services;
-using Humanizer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +44,7 @@ try
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedUsers(userManager, roleManager);
+    // await Seed.SeedUsers(userManager, roleManager);
     // await SeedStavbe.Seed(context);
     // await SeedMerilnaMesta.ImportMM(context);
     // await SeedMojElektroMMesta.ImportMM(context);

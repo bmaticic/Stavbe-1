@@ -1,0 +1,328 @@
+[33mcommit 5ae036c0149e3974834aaed4709ddb6413268d64[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Bozo Maticic <bozo.maticic@mm-sol.si>
+Date:   Sat Jul 19 10:20:01 2025 +0200
+
+    pred echarts za moj elektro
+
+[1mdiff --git a/.github/copilot-instructions.md b/.github/copilot-instructions.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..bbbfc56[m
+[1m--- /dev/null[m
+[1m+++ b/.github/copilot-instructions.md[m
+[36m@@ -0,0 +1,66 @@[m
+[32m+[m[32m# Copilot Instructions for Stavbe Codebase[m
+[32m+[m
+[32m+[m[32m## Overview[m
+[32m+[m[32mThis repository is a full-stack solution for managing building (stavbe) data, with a .NET API backend and an Angular client frontend. The workspace is organized into two main folders: `API/` (C#/.NET) and `client/` (Angular). Data flows from the backend (Entity Framework, REST controllers) to the frontend (Angular services/components).[m
+[32m+[m
+[32m+[m[32m## Key Architectural Patterns[m
+[32m+[m[32m- **Backend (API/):**[m
+[32m+[m[32m  - Uses Entity Framework Core for data access (`Data/`, `Entities/`, `Migrations/`).[m
+[32m+[m[32m  - Business logic and data queries are in `Data/Repos/` (e.g., `MojElektroRepository.cs`).[m
+[32m+[m[32m  - DTOs in `DTOs/` are used for shaping API responses.[m
+[32m+[m[32m  - Controllers in `Controllers/` expose REST endpoints.[m
+[32m+[m[32m  - Helpers, middleware, and extensions are in their respective folders for cross-cutting concerns.[m
+[32m+[m[32m- **Frontend (client/):**[m
+[32m+[m[32m  - Angular 18+ project structure (`src/app/`).[m
+[32m+[m[32m  - Models in `_models/` mirror backend DTOs/entities for type safety.[m
+[32m+[m[32m  - UI logic is split into feature modules/components (e.g., `moj-elektro-card`).[m
+[32m+[m[32m  - Uses `ngx-bootstrap` for UI widgets (e.g., datepickers/tabs).[m
+[32m+[m
+[32m+[m[32m## Developer Workflows[m
+[32m+[m[32m- **Build/Run:**[m
+[32m+[m[32m  - Backend: Use Visual Studio or `dotnet build`, run with `dotnet run`.[m
+[32m+[m[32m  - Frontend: Use `ng serve` for development, `ng build` for production builds.[m
+[32m+[m[32m- **Testing:**[m
+[32m+[m[32m  - Backend: Standard .NET test projects (not present in context, add if needed).[m
+[32m+[m[32m  - Frontend: Run `ng test` for unit tests (Karma).[m
+[32m+[m[32m- **Debugging:**[m
+[32m+[m[32m  - Backend: Use Visual Studio debugger or `dotnet watch run`.[m
+[32m+[m[32m  - Frontend: Use browser dev tools and Angular CLI error output.[m
+[32m+[m
+[32m+[m[32m## Project-Specific Conventions[m
+[32m+[m[32m- **DTOs and Entities:**[m
+[32m+[m[32m  - Always use DTOs for API responses; do not expose entities directly.[m
+[32m+[m[32m  - Map entities to DTOs using AutoMapper (see `Helpers/AutoMapperProfiles.cs`).[m
+[32m+[m[32m- **Repository Pattern:**[m
+[32m+[m[32m  - All data access is via repository classes in `Data/Repos/`.[m
+[32m+[m[32m  - Async methods return `Task<T>` and use EF Core's async LINQ methods.[m
+[32m+[m[32m- **Frontend Data Binding:**[m
+[32m+[m[32m  - Use Angular's async pipes and RxJS for API calls.[m
+[32m+[m[32m  - UI components expect strongly typed models from `_models/`.[m
+[32m+[m[32m- **UI Libraries:**[m
+[32m+[m[32m  - For datepickers/tabs, import `ngx-bootstrap` modules in your Angular module (see error troubleshooting above).[m
+[32m+[m
+[32m+[m[32m## Integration Points[m
+[32m+[m[32m- **API <-> Client:**[m
+[32m+[m[32m  - REST endpoints in `Controllers/` are consumed by Angular services.[m
+[32m+[m[32m  - Data contracts are kept in sync via DTOs and TypeScript interfaces.[m
+[32m+[m[32m- **External Dependencies:**[m
+[32m+[m[32m  - Angular: `ngx-bootstrap`, `@types/google.maps` (for map features).[m
+[32m+[m[32m  - API: Entity Framework Core, AutoMapper.[m
+[32m+[m
+[32m+[m[32m## Examples[m
+[32m+[m[32m- **Adding a new API endpoint:**[m
+[32m+[m[32m  - Create a DTO in `DTOs/`, update the entity in `Entities/`, add logic in `Data/Repos/`, expose via a controller in `Controllers/`.[m
+[32m+[m[32m- **Adding a new Angular feature:**[m
+[32m+[m[32m  - Generate a component (`ng generate component`), add a model in `_models/`, create a service for API calls, and update routing/module as needed.[m
+[32m+[m
+[32m+[m[32m## Key Files/Folders[m
+[32m+[m[32m- `API/Controllers/` - REST API endpoints[m
+[32m+[m[32m- `API/Data/Repos/` - Data access logic[m
+[32m+[m[32m- `API/DTOs/` - Data transfer objects[m
+[32m+[m[32m- `client/src/app/_models/` - TypeScript models[m
+[32m+[m[32m- `client/src/app/` - Angular components/services[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32mIf any section is unclear or missing important project-specific details, please provide feedback or specify which workflows/patterns need more documentation.[m
+[1mdiff --git a/API/Controllers/MojElektroController.cs b/API/Controllers/MojElektroController.cs[m
+[1mindex 888100b..7e17083 100644[m
+[1m--- a/API/Controllers/MojElektroController.cs[m
+[1m+++ b/API/Controllers/MojElektroController.cs[m
+[36m@@ -1,4 +1,5 @@[m
+ using System;[m
+[32m+[m[32musing API.DTOs;[m
+ using API.Entities.MojElektro;[m
+ using API.Helpers;[m
+ using API.Interfaces;[m
+[36m@@ -8,6 +9,7 @@[m [mnamespace API.Controllers;[m
+ [m
+ public class MojElektroController(IMojElektroRepository mojElektroRepository) : BaseApiController[m
+ {[m
+[32m+[m[32m    // vrne seznam vseh moj elektro merilnih mest za določeno stavbo (v glavnem je eden)[m
+     [HttpGet("moj-elektro-merilna-mesta/{nazivStavbe}")][m
+     public async Task<ActionResult<MojElektroMerilnoMesto[]>> GetMojElektroMerilnaMesta(string nazivStavbe)[m
+     {[m
+[36m@@ -16,6 +18,7 @@[m [mpublic class MojElektroController(IMojElektroRepository mojElektroRepository) :[m
+         return Ok(mojEleMerMesta);[m
+     }[m
+ [m
+[32m+[m[32m    // struktura za Egraf za moj elektro merilno mesto po enotnem identifikatorju[m
+     [HttpGet("moj-elektro-merilno-mesto/{enotniIdentifikator}")][m
+     public async Task<ActionResult<Egraf>> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator)[m
+     {[m
+[36m@@ -24,6 +27,26 @@[m [mpublic class MojElektroController(IMojElektroRepository mojElektroRepository) :[m
+         return Ok(egraf);[m
+     }[m
+ [m
+[32m+[m[32m    [HttpGet("moj-elektro-merilna-mesta-vsa")][m
+[32m+[m[32m    public async Task<ActionResult<MojElektroMerilnoMestoDto[]>> GetVsaMojElektroMerilnaMesta()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        var mojEleMerMesta = await mojElektroRepository.GetVsaMojElektroMerilnaMesta();[m
+[32m+[m[32m        if (mojEleMerMesta == null) return NotFound();[m
+[32m+[m[32m        return Ok(mojEleMerMesta);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // moj elektro merilno mesto po enotnem identifikatorju[m
+[32m+[m[32m    [HttpGet("{enotniIdentifikator}")][m
+[32m+[m[32m    public async Task<ActionResult<MojElektroMerilnoMestoDto>> GetMojElektroMerilnoMesto(string enotniIdentifikator)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if (string.IsNullOrEmpty(enotniIdentifikator)) return BadRequest("Enotni identifikator ni določen.");[m
+[32m+[m
+[32m+[m[32m        var mojEleMerMesto = await mojElektroRepository.GetMojElektroMerilnoMesto(enotniIdentifikator);[m
+[32m+[m[32m        if (mojEleMerMesto == null) return NotFound();[m
+[32m+[m
+[32m+[m[32m        return Ok(mojEleMerMesto);[m
+[32m+[m[32m    }[m
+[32m+[m
+ [m
+ [m
+ }[m
+[1mdiff --git a/API/Controllers/StavbeController.cs b/API/Controllers/StavbeController.cs[m
+[1mindex 624cac3..e6a85b5 100644[m
+[1m--- a/API/Controllers/StavbeController.cs[m
+[1m+++ b/API/Controllers/StavbeController.cs[m
+[36m@@ -62,7 +62,6 @@[m [mpublic class StavbeController(IStavbeRepository stavbeRepository, IMapper mapper[m
+     }[m
+ [m
+ [m
+[31m-[m
+     [HttpGet("{id:int}")][m
+     public async Task<ActionResult<Stavba>> GetStavba(int id)[m
+     {[m
+[1mdiff --git a/API/DTOs/MojElektroMerilnoMestoDto.cs b/API/DTOs/MojElektroMerilnoMestoDto.cs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..7c9007d[m
+[1m--- /dev/null[m
+[1m+++ b/API/DTOs/MojElektroMerilnoMestoDto.cs[m
+[36m@@ -0,0 +1,36 @@[m
+[32m+[m[32musing API.Entities;[m
+[32m+[m[32musing API.Entities.MojElektro;[m
+[32m+[m
+[32m+[m[32mnamespace API.DTOs;[m
+[32m+[m
+[32m+[m[32mpublic class MojElektroMerilnoMestoDto[m
+[32m+[m[32m{[m
+[32m+[m[32m    public int Id { get; set; }[m
+[32m+[m[32m    public string? EnotniIdentifikator { get; set; }[m
+[32m+[m[32m    public string SifraJavnegaObjekta { get; set; } = null!;[m
+[32m+[m[32m    public string NazivJavnegaObjekta { get; set; } = null!;[m
+[32m+[m[32m    public string? PhotoUrl { get; set; }     // slika stavbe[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    public string? GsrnMM { get; set; }[m
+[32m+[m[32m    public string? Naziv { get; set; }[m
+[32m+[m[32m    public string? Naslov { get; set; }[m
+[32m+[m[32m    public string? RTP { get; set; }[m
+[32m+[m[32m    public string? SNizvod { get; set; }[m
+[32m+[m[32m    public string? TP { get; set; }[m
+[32m+[m[32m    public string? NNizvod { get; set; }[m
+[32m+[m[32m    public string? Dobavitelj { get; set; }[m
+[32m+[m
+[32m+[m[32m    #region[m
+[32m+[m[32m    /// <summary>[m
+[32m+[m[32m    /// Id Javnega objekta na katerega je povezano to merilno mesto[m
+[32m+[m[32m    /// </summary>[m
+[32m+[m[32m    public int IdJavnegaObjekta { get; set; }[m
+[32m+[m[32m    #endregion[m
+[32m+[m
+[32m+[m[32m    // #region Navigation Properties[m
+[32m+[m[32m    // public Stavba? Stavba { get; set; } = null!;[m
+[32m+[m[32m    // public ICollection<MojElektro15MinMeritev>? Meritve15min { get; set; } = null!;[m
+[32m+[m[32m    // #endregion[m
+[32m+[m
+[32m+[m[32m}[m
+[1mdiff --git a/API/Data/Repos/MojElektroRepository.cs b/API/Data/Repos/MojElektroRepository.cs[m
+[1mindex d1b51fa..7878182 100644[m
+[1m--- a/API/Data/Repos/MojElektroRepository.cs[m
+[1m+++ b/API/Data/Repos/MojElektroRepository.cs[m
+[36m@@ -1,12 +1,15 @@[m
+ using System;[m
+[32m+[m[32musing System.Linq;[m
+[32m+[m[32musing API.DTOs;[m
+ using API.Entities.MojElektro;[m
+ using API.Helpers;[m
+ using API.Interfaces;[m
+[32m+[m[32musing AutoMapper;[m
+ using Microsoft.EntityFrameworkCore;[m
+ [m
+ namespace API.Data.Repos;[m
+ [m
+[31m-public class MojElektroRepository(DataContext context) : IMojElektroRepository[m
+[32m+[m[32mpublic class MojElektroRepository(DataContext context, IMapper mapper) : IMojElektroRepository[m
+ {[m
+     public async Task<MojElektroMerilnoMesto[]> GetMojElektroMerilnaMesta(string nazivStavbe)[m
+     {[m
+[36m@@ -54,4 +57,27 @@[m [mpublic class MojElektroRepository(DataContext context) : IMojElektroRepository[m
+             AxisXLabele = axisXLabele?.ToList(), // Prvih 96 časovnih oznak[m
+         };[m
+     }[m
+[32m+[m
+[32m+[m[32m    public async Task<MojElektroMerilnoMestoDto[]> GetVsaMojElektroMerilnaMesta()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        var mmesta = await context.MojElektroMerilnaMesta[m
+[32m+[m[32m        .Include(x => x.Stavba)[m
+[32m+[m[32m        .Include(x => x.Stavba!.PhotosStavbe)[m
+[32m+[m[32m        .ToArrayAsync();[m
+[32m+[m[32m        if (mmesta == null || mmesta.Length == 0) return Array.Empty<MojElektroMerilnoMestoDto>();[m
+[32m+[m
+[32m+[m[32m        return mapper.Map<MojElektroMerilnoMestoDto[]>(mmesta);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public async Task<MojElektroMerilnoMestoDto> GetMojElektroMerilnoMesto(string enotniIdentifikator)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        var mmesto = await context.MojElektroMerilnaMesta[m
+[32m+[m[32m        .Where(x => x.EnotniIdentifikator == enotniIdentifikator)[m
+[32m+[m[32m        .Include(x => x.Stavba)[m
+[32m+[m[32m        .Include(x => x.Stavba!.PhotosStavbe)[m
+[32m+[m[32m        .SingleOrDefaultAsync();[m
+[32m+[m[32m        if (mmesto == null ) return new MojElektroMerilnoMestoDto();[m
+[32m+[m[32m        return mapper.Map<MojElektroMerilnoMestoDto>(mmesto);[m
+[32m+[m[32m    }[m
+[32m+[m
+ }[m
+[1mdiff --git a/API/Helpers/AutoMapperProfiles.cs b/API/Helpers/AutoMapperProfiles.cs[m
+[1mindex 271b03d..694fcc6 100644[m
+[1m--- a/API/Helpers/AutoMapperProfiles.cs[m
+[1m+++ b/API/Helpers/AutoMapperProfiles.cs[m
+[36m@@ -1,6 +1,7 @@[m
+ using System;[m
+ using API.DTOs;[m
+ using API.Entities;[m
+[32m+[m[32musing API.Entities.MojElektro;[m
+ using API.Extensions;[m
+ using AutoMapper;[m
+ [m
+[36m@@ -29,5 +30,11 @@[m [mpublic class AutoMapperProfiles : Profile[m
+ [m
+         CreateMap<MerilnoMesto, MerilnoMestoDto>();[m
+         CreateMap<GeoTocka, GeoTockaDto>();[m
+[32m+[m
+[32m+[m[32m        CreateMap<MojElektroMerilnoMesto, MojElektroMerilnoMestoDto>()[m
+[32m+[m[32m            .ForMember(d => d.PhotoUrl, o =>[m
+[32m+[m[32m                o.MapFrom(s => s.Stavba!.PhotosStavbe.FirstOrDefault(x => x.IsMain)!.Url))[m
+[32m+[m[32m            .ForMember(d => d.IdJavnegaObjekta, o =>[m
+[32m+[m[32m                o.MapFrom(s => s.Stavba!.Id));[m[41m [m
+     }[m
+ }[m
+[1mdiff --git a/API/Interfaces/IMojElektroRepository.cs b/API/Interfaces/IMojElektroRepository.cs[m
+[1mindex ba379aa..0f45300 100644[m
+[1m--- a/API/Interfaces/IMojElektroRepository.cs[m
+[1m+++ b/API/Interfaces/IMojElektroRepository.cs[m
+[36m@@ -1,4 +1,5 @@[m
+ using System;[m
+[32m+[m[32musing API.DTOs;[m
+ using API.Entities.MojElektro;[m
+ using API.Helpers;[m
+ [m
+[36m@@ -9,4 +10,8 @@[m [mpublic interface IMojElektroRepository[m
+     Task<MojElektroMerilnoMesto[]> GetMojElektroMerilnaMesta(string nazivStavbe);[m
+     Task<Egraf> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator);[m
+ [m
+[32m+[m[32m    Task<MojElektroMerilnoMestoDto[]> GetVsaMojElektroMerilnaMesta();[m
+[32m+[m
+[32m+[m[32m    Task<MojElektroMerilnoMestoDto> GetMojElektroMerilnoMesto(string enotniIdentifikator);[m
+[32m+[m
+ }[m
+[1mdiff --git a/client/angular.json b/client/angular.json[m
+[1mindex 3bb47e1..f7483b3 100644[m
+[1m--- a/client/angular.json[m
+[1m+++ b/client/angular.json[m
+[36m@@ -32,6 +32,8 @@[m
+               "node_modules/bootswatch/dist/sandstone/bootstrap.min.css",[m
+               "node_modules/ngx-spinner/animations/line-scale-party.css",[m
+               "node_modules/ngx-toastr/toastr.css",[m
+[32m+[m[32m              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",[m
+[32m+[m
+               "src/styles.css"[m
+             ],[m
+             "scripts": [][m
+[1mdiff --git a/client/src/app/_models/MojElektroMerilnoMesto.ts b/client/src/app/_models/MojElektroMerilnoMesto.ts[m
+[1mindex ea52a1b..59b5a18 100644[m
+[1m--- a/client/src/app/_models/MojElektroMerilnoMesto.ts[m
+[1m+++ b/client/src/app/_models/MojElektroMerilnoMesto.ts[m
+[36m@@ -1,7 +1,12 @@[m
+[32m+[m[32mimport { Photo } from "./photo"[m
+[32m+[m[32mimport { Stavba } from "./stavba"[m
+[32m+[m
+ export interface MojElektroMerilnoMesto {[m
+   enotniIdentifikator: string[m
+   sifraJavnegaObjekta: string[m
+   nazivJavnegaObjekta: string[m
+[32m+[m[32m  photoUrl: string     // slika stavbe[m
+[32m+[m
+   gsrnMM: string[m
+   naziv: string[m
+   naslov: string[m
+[36m@@ -11,6 +16,7 @@[m [mexport interface MojElektroMerilnoMesto {[m
+   nNizvod: string[m
+   dobavitelj: string[m
+   idJavnegaObjekta: number[m
+[31m-  stavba: any[m
+[31m-  meritve15min: any[m
+[32m+[m[32m  stavba: Stavba[m
+[32m+[m[32m  photoStavbe: Photo[m
+[32m+[m[32m  meritve15min: any[][m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/client/src/app/_services/moj-elektro.service.ts b/client/src/app/_services/moj-elektro.service.ts[m
+[1mindex 115b116..03c75cd 100644[m
+[1m--- a/client/src/app/_services/moj-elektro.service.ts[m
+[1m+++ b/client/src/app/_services/moj-elektro.service.ts[m
+[36m@@ -1,5 +1,5 @@[m
+ import { HttpClient } from '@angular/common/http';[m
+[31m-import { inject, Injectable } from '@angular/core';[m
+[32m+[m[32mimport { inject, Injectable, signal } from '@angular/core';[m
+ import { environment } from '../../environments/environment';[m
+ import 
