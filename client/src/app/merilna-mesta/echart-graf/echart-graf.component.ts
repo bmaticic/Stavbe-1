@@ -10,11 +10,12 @@ import { GridComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { CommonModule } from '@angular/common';
 import { Egraf } from '../../_models/egraf';
+import { IEchartData } from '../../_models/echart-data';
 echarts.use([BarChart, LineChart, GridComponent, CanvasRenderer]);
 
 @Component({
   selector: 'app-echart-graf',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxEchartsDirective],
   templateUrl: './echart-graf.component.html',
   styleUrl: './echart-graf.component.css',
@@ -23,11 +24,14 @@ echarts.use([BarChart, LineChart, GridComponent, CanvasRenderer]);
   ]
 })
 export class EchartGrafComponent {
-  @Input() selectedMerilnoMestoGraf: Egraf | null = null; // Input to receive selected merilno mesto data
+  // Input to receive selected merilno mesto data prirejeno za Echarts
+  // @Input() eChartsEnergijaAPlus: IEchartData | null = null;    
+  @Input() selectedMerilnoMestoGraf: Egraf | null = null;      // isti za energijaAPlus in za prejetaDelovnaMoč
 
-    ngOnChanges(changes: SimpleChanges) {
-    const change = changes ['selectedMerilnoMestoGraf'];
-    if (!change.isFirstChange() && this.selectedMerilnoMestoGraf){
+
+  ngOnChanges(changes: SimpleChanges) {
+    const change = changes['selectedMerilnoMestoGraf'];
+    if (!change.isFirstChange() && this.selectedMerilnoMestoGraf) {
       this.chartOption = {
         xAxis: {
           type: 'category',
@@ -63,4 +67,6 @@ export class EchartGrafComponent {
       },
     ],
   };
+
+  
 }

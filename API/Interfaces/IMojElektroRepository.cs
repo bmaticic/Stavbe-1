@@ -8,10 +8,13 @@ namespace API.Interfaces;
 public interface IMojElektroRepository
 {
     Task<MojElektroMerilnoMesto[]> GetMojElektroMerilnaMesta(string nazivStavbe);
-    Task<Egraf> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator);
-
     Task<MojElektroMerilnoMestoDto[]> GetVsaMojElektroMerilnaMesta();
 
     Task<MojElektroMerilnoMestoDto> GetMojElektroMerilnoMesto(string enotniIdentifikator);
+
+    Task<Egraf> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator);
+    
+
+
 
 }

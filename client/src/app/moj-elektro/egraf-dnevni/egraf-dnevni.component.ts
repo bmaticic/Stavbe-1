@@ -4,12 +4,15 @@ import { IRange, RangePreDefinirani } from '../../_models/i-range';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MojElektroGrafComponent } from "../moj-elektro-graf/moj-elektro-graf.component";
+import { map, Observable } from 'rxjs';
+import { IEchartData } from '../../_models/echart-data';
 
 
 @Component({
   selector: 'app-egraf-dnevni',
   standalone: true,
-  imports: [CommonModule, BsDatepickerModule, FormsModule],
+  imports: [CommonModule, BsDatepickerModule, FormsModule, MojElektroGrafComponent],
   templateUrl: './egraf-dnevni.component.html',
   styleUrls: ['./egraf-dnevni.component.css']
 })
@@ -23,12 +26,27 @@ export class EgrafDnevniComponent implements OnInit {
   error: string | null = null;
   chartData: any = null; // replace `any` with a proper model when available
 
+  public eChartsEnergijaAPlus: Observable<IEchartData> =
+    new Observable<IEchartData>();
+
+
   private formatDateAsString(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   }
+
+  // --- hard coded
+  public sifraEnergijaMoc: string = "EnergijaAPlus";  // EnergijaAPlus, PrejetaDelovnaMoc
+  public sifraAgregacija: string = "PoLetihPoMesecih";  // PoLetihPoMesecih, PoLetihPoTednihPoDnevih, PoLetihPoDnevihPoUrah
+
+
+  public letoOD: number = 2022;          // --- hard coded datumOD   datumDO
+  public letoDO: number = 2025;
+  public mesecOD: number = 1;
+  public mesecDO: number = 1;
+
 
   ngOnInit(): void {
     // Ensure selectedRange has a sensible default value (last 7 days)
@@ -69,7 +87,7 @@ export class EgrafDnevniComponent implements OnInit {
 
     // Example: try common service method names, falling back to a warning.
     const svc: any = this.mojElektroService;
-    const possibleMethods = ['getDailyData', 'getDailyGraph', 'getEgrafDnevni'];
+    const possibleMethods = ['getDailyData', 'getDailyGraph', 'get_agregirane_PodatkeZaMojElektroMerilnoMesto'];
 
     const method = possibleMethods.find(m => typeof svc[m] === 'function');
     if (!method) {
@@ -78,7 +96,23 @@ export class EgrafDnevniComponent implements OnInit {
     }
 
     try {
-      const obs = svc[method](rangeValues[0], rangeValues[1]);
+
+      // const obs = svc[method](rangeValues[0], rangeValues[1]);
+      const enotniIdentifikator = this.mojElektroService.mojElektroSignal()?.enotniIdentifikator;
+      const idJavnegaObjekta = this.mojElektroService.mojElektroSignal()?.idJavnegaObjekta;
+      if (!enotniIdentifikator) {
+        this.error = 'No merilno mesto selected';
+        return;
+      }
+      if (!idJavnegaObjekta) {
+        this.error = 'No javni objekt associated with selected merilno mesto';
+        return;
+      }
+
+      const obs = svc[method](idJavnegaObjekta, enotniIdentifikator, this.sifraAgregacija,
+        this.sifraEnergijaMoc,
+        this.letoOD, this.letoDO, this.mesecOD, this.mesecDO);
+
       if (!obs || typeof obs.subscribe !== 'function') {
         this.error = 'Service did not return an observable';
         return;
@@ -87,7 +121,20 @@ export class EgrafDnevniComponent implements OnInit {
       this.isLoading = true;
       obs.subscribe({
         next: (data: any) => {
-          this.chartData = data;
+
+            const obs: IEchartData =
+             {
+              chartLabel: data.chartLabel,
+              enotaMere: data.enotaMere,
+              axisXLabels: data.axisXLabels,
+              linesData: data.lines.map((item: any[]) => item.values),
+              legend: data.lines.map((item: { type: any }) => item.type),
+              legendaOriginal: data.lines.map((item: { typeOriginal: any; }) => item.typeOriginal),
+              legendaOriginalDistinct: data.legendaOriginal,
+              legendaLeto: data.lines.map((item: { type: any }) => item.type.substr(0,4))
+            };
+
+          this.chartData = obs;
           this.isLoading = false;
         },
         error: (err: any) => {

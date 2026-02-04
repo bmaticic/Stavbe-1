@@ -1,0 +1,11 @@
+.my-chart {
+    height: fit-content;
+  }
+
+.slide1 {
+  margin-left: 30px;
+}
+
+.separator {
+  flex: 1 1 auto;
+}

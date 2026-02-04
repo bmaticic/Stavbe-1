@@ -1,5 +1,7 @@
 using System;
+using API.Data.Repos;
 using API.DTOs;
+using API.Entities;
 using API.Entities.MojElektro;
 using API.Helpers;
 using API.Interfaces;
@@ -46,6 +48,9 @@ public class MojElektroController(IMojElektroRepository mojElektroRepository) : 
 
         return Ok(mojEleMerMesto);
     }
+
+
+
 
 
 

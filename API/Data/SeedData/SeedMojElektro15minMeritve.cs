@@ -36,9 +36,9 @@ public class SeedMojElektro15minMeritve
         }
         Dictionary<string, int> seznamNeuvrscenihMerilnihMest = new Dictionary<string, int>();
 
-        var path = "Data/Source/MojElektro/15minMeritve2022-2023.xlsx";
+        // var path = "Data/Source/MojElektro/15minMeritve2022-2023.xlsx";
         // var path = "Data/Source/MojElektro/3-141747-15minMeritve2024-2025.xlsx";
-        // var path = "Data/Source/MojElektro/3-144174-15minMeritve2025-01-01-2025-09-13.xlsx";
+        var path = "Data/Source/MojElektro/3-147968-15minMeritve2024.xlsx";
 
 
         using var stream = System.IO.File.OpenRead(path);
@@ -70,14 +70,14 @@ public class SeedMojElektro15minMeritve
             var row = worksheet.Cells[
                 nRow, 1, nRow, worksheet.Dimension.End.Column];
 
-            if (row[nRow, koloneDict["Status odčitka A+"]].GetValue<string>() != null)
-                continue;
-            if (row[nRow, koloneDict["Status odčitka A-"]].GetValue<string>() != null)
-                continue;
-            if (row[nRow, koloneDict["Status odčitka R+"]].GetValue<string>() != null)
-                continue;
-            if (row[nRow, koloneDict["Status odčitka R-"]].GetValue<string>() != null)
-                continue;
+            // if (row[nRow, koloneDict["Status odčitka A+"]].GetValue<string>() != null)
+            //     continue;
+            // if (row[nRow, koloneDict["Status odčitka A-"]].GetValue<string>() != null)
+            //     continue;
+            // if (row[nRow, koloneDict["Status odčitka R+"]].GetValue<string>() != null)
+            //     continue;
+            // if (row[nRow, koloneDict["Status odčitka R-"]].GetValue<string>() != null)
+            //     continue;
 
 
             // if (await context.MojElektro15MinMeritve.AnyAsync()) return;
