@@ -31,11 +31,16 @@ const seriesListEnergijaAPlus: SeriesOption[] = [];
 export class MojElektroGrafComponent {
   // Input to receive selected merilno mesto data prirejeno za Echarts
   @Input() eChartsEnergijaAPlus: IEchartData | null = null;
-  chartOptions!: EChartsOption;
-  lineStyle = {
+  @Input() lineStyle: any = {
     width: 0.4,
     opacity: 0.7
   };
+  @Input() legendConfig: any = {
+    top: 40,
+    type: 'scroll',
+    selectedMode: true
+  };
+  chartOptions!: EChartsOption;
 
 
 
@@ -76,10 +81,8 @@ export class MojElektroGrafComponent {
           left: 'center'
         },
         legend: {
-          top: 40,
-          type: 'scroll',
-          data: this.eChartsEnergijaAPlus?.legend,
-          selectedMode: true
+          ...this.legendConfig,
+          data: this.eChartsEnergijaAPlus?.legend
         },
         toolbox: {
           show: true,

@@ -9,6 +9,9 @@
     "test": "ng test"
   },
   "private": true,
+  "engines": {
+    "node": ">=18 <19 || >=20 <21"
+  },
   "dependencies": {
     "@angular/animations": "^19.1.7",
     "@angular/cdk": "^18.2.0",

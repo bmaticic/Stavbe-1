@@ -17,6 +17,7 @@ export class MojElektroService {
 
   mojElektroSignal = signal<MojElektroMerilnoMesto | null>(null);
   selectedRangeSignal = signal<IRange | null>(null);
+  activeTabSignal = signal<number>(0); // Track which tab is active (0-based index)
 
   // moj-elektro merilna mesta za stavbo
   getMojElektroMerilnaMesta(naziv: string) {

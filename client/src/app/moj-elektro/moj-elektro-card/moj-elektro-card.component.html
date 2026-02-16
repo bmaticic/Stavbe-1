@@ -30,32 +30,38 @@
 
 
 <tabset class="member-tabset">
-    <tab heading="Dnevne količine" [active]="true">
-        <!-- <h4>Dnevne količine za merilno mesto {{mojElektroMerilnoMesto.enotniIdentifikator}}</h4> -->
-
-        <!-- <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
-            <input type="text" class="form-control"
-                placeholder="{{selectedRange.value[0]}}  -- {{selectedRange.value[1]}}" 
-                bsDaterangepicker
-                (bsValueChange)="onValueChange($event)" [bsConfig]="{ ranges: ranges , dateInputFormat: 'dd/MM/yyyy'}"
-                [(ngModel)]="selectedRange">
-        </div>
- -->
-
-        <app-egraf-dnevni></app-egraf-dnevni>
+    <tab heading="Primerjalno po mesecih" (selectTab)="onTabSelect(0)">
+        @if(mojElektroService.activeTabSignal().valueOf() === 0)
+        {
+            <app-egraf-dnevni></app-egraf-dnevni>
+        }
+    </tab>
+    <tab heading="Primerjalno po tednih" (selectTab)="onTabSelect(1)">
+        @if(mojElektroService.activeTabSignal().valueOf() === 1)
+        {
+            <app-egraf-dnevni></app-egraf-dnevni>
+        }
+    </tab>
+    <tab heading="Primerjalno po urah" [active]="true" (selectTab)="onTabSelect(2)">
+        <h4>Tab signal je: {{mojElektroService.activeTabSignal()}}</h4>
+        @if(mojElektroService.activeTabSignal().valueOf() === 2)
+        {
+            <app-egraf-po-urah></app-egraf-po-urah>
+        }
     </tab>
 
-    <tab heading="15min podatki">
+    <tab heading="15min podatki" (selectTab)="onTabSelect(2)">
+        <h4>Tab signal za 15min podatki: {{mojElektroService.activeTabSignal()}}</h4>
         <!-- Add your map component here -->
     </tab>
-    <tab heading="15min podatki po časovnih blokih">
+    <tab heading="15min podatki po časovnih blokih" (selectTab)="onTabSelect(3)">
         <!-- Add your map component here -->
     </tab>
-    <tab heading="Časovna porazdelitev po letih">
+    <tab heading="Časovna porazdelitev po letih" (selectTab)="onTabSelect(4)">
         <!-- Add your map component here -->
     </tab>
 
-    <tab heading="Dostop do zunanje aplikacije Moj-elektro">
+    <tab heading="Dostop do zunanje aplikacije Moj-elektro" (selectTab)="onTabSelect(5)">
         <h4>Dostop do zunanje app Moj-elektro za merilno mesto {{mojElektroMerilnoMesto.enotniIdentifikator}}</h4>
         <app-moj-elektro-read15></app-moj-elektro-read15>
     </tab>

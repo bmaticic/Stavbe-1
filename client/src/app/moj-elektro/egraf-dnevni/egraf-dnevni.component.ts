@@ -1,12 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, effect } from '@angular/core';
 import { MojElektroService } from '../../_services/moj-elektro.service';
+import { FetchDataService } from '../../_services/fetch-data.service';
 import { IRange, RangePreDefinirani } from '../../_models/i-range';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MojElektroGrafComponent } from "../moj-elektro-graf/moj-elektro-graf.component";
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IEchartData } from '../../_models/echart-data';
+import { formatDateAsString } from '../../_utils/date-utils';
 
 
 @Component({
@@ -16,8 +18,9 @@ import { IEchartData } from '../../_models/echart-data';
   templateUrl: './egraf-dnevni.component.html',
   styleUrls: ['./egraf-dnevni.component.css']
 })
-export class EgrafDnevniComponent implements OnInit {
+export class EgrafDnevniComponent implements OnInit, AfterViewInit {
   mojElektroService = inject(MojElektroService);
+  fetchDataService = inject(FetchDataService);
   ranges: IRange[] = new RangePreDefinirani().getRanges();
   selectedRange: IRange = this.ranges[0];
 
@@ -29,13 +32,18 @@ export class EgrafDnevniComponent implements OnInit {
   public eChartsEnergijaAPlus: Observable<IEchartData> =
     new Observable<IEchartData>();
 
+  // Chart styling configuration
+  lineStyle = {
+    width: 1.5,
+    opacity: 0.7
+  };
 
-  private formatDateAsString(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
+  legendConfig = {
+    top: 40,
+    type: 'scroll' as const,
+    selectedMode: true
+  };
+
 
   // --- hard coded
   public sifraEnergijaMoc: string = "EnergijaAPlus";  // EnergijaAPlus, PrejetaDelovnaMoc
@@ -47,6 +55,24 @@ export class EgrafDnevniComponent implements OnInit {
   public mesecOD: number = 1;
   public mesecDO: number = 1;
 
+  constructor() {
+    // Watch for merilno mesto changes and re-fetch data
+    effect(() => {
+      const merilnoMesto = this.mojElektroService.mojElektroSignal();
+      if (merilnoMesto) {
+        this.fetchData();
+      }
+    });
+
+    // Watch for tab selection changes (tab index 0 = Dnevne količine)
+    effect(() => {
+      const activeTab = this.mojElektroService.activeTabSignal();
+      if (activeTab === 0 && this.mojElektroService.mojElektroSignal()) {
+        this.fetchData();
+      }
+    });
+  }
+
 
   ngOnInit(): void {
     // Ensure selectedRange has a sensible default value (last 7 days)
@@ -55,26 +81,26 @@ export class EgrafDnevniComponent implements OnInit {
       const start = new Date(end);
       start.setDate(end.getDate() - 6); // last 7 days including today
       this.selectedRange.value = [start, end];
-      this.selectedRange.label = `${this.formatDateAsString(start)} - ${this.formatDateAsString(end)}`;
+      this.selectedRange.label = `${formatDateAsString(start)} - ${formatDateAsString(end)}`;
     }
+  }
 
-    // Initial load
-    this.fetchData();
+  ngAfterViewInit(): void {
+    // Fetch data when tab becomes visible/active
+      this.fetchData();
   }
 
   onValueChange($event: (Date | undefined)[] | undefined) {
     if ($event && $event.length === 2) {
       this.selectedRange.value = $event as Date[];
-      this.selectedRange.label = `${this.formatDateAsString($event[0]!)} - ${this.formatDateAsString($event[1]!)}`;
+      this.selectedRange.label = `${formatDateAsString($event[0]!)} - ${formatDateAsString($event[1]!)}`;
       // Reload data for the newly selected range
       this.fetchData();
     }
   }
 
   /**
-   * Attempts to fetch data from the MojElektroService for the currently selected range.
-   * This method uses a runtime check/cast so it won't fail Typescript compilation if the
-   * concrete service method name differs; adjust the method name to the actual service API.
+   * Fetches data from the FetchDataService for the currently selected range.
    */
   fetchData(): void {
     this.error = null;
@@ -85,68 +111,38 @@ export class EgrafDnevniComponent implements OnInit {
       return;
     }
 
-    // Example: try common service method names, falling back to a warning.
-    const svc: any = this.mojElektroService;
-    const possibleMethods = ['getDailyData', 'getDailyGraph', 'get_agregirane_PodatkeZaMojElektroMerilnoMesto'];
-
-    const method = possibleMethods.find(m => typeof svc[m] === 'function');
-    if (!method) {
-      console.warn('No known data-fetch method found on MojElektroService. Expected one of:', possibleMethods);
+    const enotniIdentifikator = this.mojElektroService.mojElektroSignal()?.enotniIdentifikator;
+    const idJavnegaObjekta = this.mojElektroService.mojElektroSignal()?.idJavnegaObjekta;
+    
+    if (!enotniIdentifikator) {
+      this.error = 'No merilno mesto selected';
       return;
     }
-
-    try {
-
-      // const obs = svc[method](rangeValues[0], rangeValues[1]);
-      const enotniIdentifikator = this.mojElektroService.mojElektroSignal()?.enotniIdentifikator;
-      const idJavnegaObjekta = this.mojElektroService.mojElektroSignal()?.idJavnegaObjekta;
-      if (!enotniIdentifikator) {
-        this.error = 'No merilno mesto selected';
-        return;
-      }
-      if (!idJavnegaObjekta) {
-        this.error = 'No javni objekt associated with selected merilno mesto';
-        return;
-      }
-
-      const obs = svc[method](idJavnegaObjekta, enotniIdentifikator, this.sifraAgregacija,
-        this.sifraEnergijaMoc,
-        this.letoOD, this.letoDO, this.mesecOD, this.mesecDO);
-
-      if (!obs || typeof obs.subscribe !== 'function') {
-        this.error = 'Service did not return an observable';
-        return;
-      }
-
-      this.isLoading = true;
-      obs.subscribe({
-        next: (data: any) => {
-
-            const obs: IEchartData =
-             {
-              chartLabel: data.chartLabel,
-              enotaMere: data.enotaMere,
-              axisXLabels: data.axisXLabels,
-              linesData: data.lines.map((item: any[]) => item.values),
-              legend: data.lines.map((item: { type: any }) => item.type),
-              legendaOriginal: data.lines.map((item: { typeOriginal: any; }) => item.typeOriginal),
-              legendaOriginalDistinct: data.legendaOriginal,
-              legendaLeto: data.lines.map((item: { type: any }) => item.type.substr(0,4))
-            };
-
-          this.chartData = obs;
-          this.isLoading = false;
-        },
-        error: (err: any) => {
-          console.error(err);
-          this.error = err?.message ?? 'Error loading data';
-          this.isLoading = false;
-        }
-      });
-    } catch (err: any) {
-      console.error(err);
-      this.error = err?.message ?? 'Unexpected error';
-      this.isLoading = false;
+    if (!idJavnegaObjekta) {
+      this.error = 'No javni objekt associated with selected merilno mesto';
+      return;
     }
+    this.isLoading = true;
+
+    this.fetchDataService.fetchEchartData(
+      idJavnegaObjekta,
+      enotniIdentifikator,
+      this.sifraAgregacija,
+      this.sifraEnergijaMoc,
+      this.letoOD,
+      this.letoDO,
+      this.mesecOD,
+      this.mesecDO
+    ).subscribe({
+      next: (data: IEchartData) => {
+        this.chartData = data;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.error = err?.message ?? 'Error loading data';
+        this.isLoading = false;
+      }
+    });
   }
 }

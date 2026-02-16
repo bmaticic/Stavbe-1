@@ -10,6 +10,6 @@
         style="width: 300px;">
 </h4>
 <div style="height: 2px; background-color: #aca3a3; margin-bottom: 55px;"></div>
-<app-moj-elektro-graf [eChartsEnergijaAPlus]="chartData"></app-moj-elektro-graf>
+<app-moj-elektro-graf [eChartsEnergijaAPlus]="chartData" [lineStyle]="lineStyle" [legendConfig]="legendConfig"></app-moj-elektro-graf>
 <div *ngIf="error" class="alert alert-danger" role="alert">
     {{error}}

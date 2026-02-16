@@ -11,15 +11,16 @@ import { FormsModule } from '@angular/forms';
 import { EgrafDnevniComponent } from "../egraf-dnevni/egraf-dnevni.component";
 import { IRange } from '../../_models/i-range';
 import { MojElektroRead15Component } from '../moj-elektro-read15/moj-elektro-read15.component';
+import { EgrafPoUrahComponent } from "../egraf-po-urah/egraf-po-urah.component";
 
 @Component({
   selector: 'app-moj-elektro-card',
-  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule, EgrafDnevniComponent, MojElektroRead15Component],  // RouterLink
+  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule, EgrafDnevniComponent, MojElektroRead15Component, EgrafPoUrahComponent],  // RouterLink
   templateUrl: './moj-elektro-card.component.html',
   styleUrl: './moj-elektro-card.component.css'
 })
 export class MojElektroCardComponent {
-  private mojElektroService = inject(MojElektroService);
+  mojElektroService = inject(MojElektroService);
   private route = inject(ActivatedRoute);
 
   mojElektroMerilnoMesto?: MojElektroMerilnoMesto;
@@ -60,9 +61,13 @@ export class MojElektroCardComponent {
         this.mojElektroMerilnoMesto = merilnoMesto;
         this.mojElektroService.mojElektroSignal.set(merilnoMesto);
         this.mojElektroService.selectedRangeSignal.set(this.selectedRange);
-
       }
     });
+  }
+
+  onTabSelect(index: number): void {
+    // Update active tab signal when tab selection changes
+    this.mojElektroService.activeTabSignal.set(index);
   }
 
   // onValueChange($event: (Date | undefined)[] | undefined) {
