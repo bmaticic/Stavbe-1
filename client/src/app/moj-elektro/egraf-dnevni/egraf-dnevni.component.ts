@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, AfterViewInit, effect } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import { MojElektroService } from '../../_services/moj-elektro.service';
 import { FetchDataService } from '../../_services/fetch-data.service';
 import { IRange, RangePreDefinirani } from '../../_models/i-range';
@@ -9,6 +9,7 @@ import { MojElektroGrafComponent } from "../moj-elektro-graf/moj-elektro-graf.co
 import { Observable } from 'rxjs';
 import { IEchartData } from '../../_models/echart-data';
 import { formatDateAsString } from '../../_utils/date-utils';
+import { fetchEchartData } from '../../_utils/fetch-data-util';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { formatDateAsString } from '../../_utils/date-utils';
   templateUrl: './egraf-dnevni.component.html',
   styleUrls: ['./egraf-dnevni.component.css']
 })
-export class EgrafDnevniComponent implements OnInit, AfterViewInit {
+export class EgrafDnevniComponent implements OnInit {
   mojElektroService = inject(MojElektroService);
   fetchDataService = inject(FetchDataService);
   ranges: IRange[] = new RangePreDefinirani().getRanges();
@@ -51,7 +52,7 @@ export class EgrafDnevniComponent implements OnInit, AfterViewInit {
 
 
   public letoOD: number = 2022;          // --- hard coded datumOD   datumDO
-  public letoDO: number = 2025;
+  public letoDO: number = 2026;
   public mesecOD: number = 1;
   public mesecDO: number = 1;
 
@@ -85,10 +86,10 @@ export class EgrafDnevniComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    // Fetch data when tab becomes visible/active
-      this.fetchData();
-  }
+  // ngAfterViewInit(): void {
+  //   // Fetch data when tab becomes visible/active
+  //     this.fetchData();
+  // }
 
   onValueChange($event: (Date | undefined)[] | undefined) {
     if ($event && $event.length === 2) {
@@ -103,46 +104,19 @@ export class EgrafDnevniComponent implements OnInit, AfterViewInit {
    * Fetches data from the FetchDataService for the currently selected range.
    */
   fetchData(): void {
-    this.error = null;
-    this.chartData = null;
-    const rangeValues = this.selectedRange.value;
-    if (!rangeValues || rangeValues.length !== 2) {
-      this.error = 'Invalid date range';
-      return;
-    }
-
-    const enotniIdentifikator = this.mojElektroService.mojElektroSignal()?.enotniIdentifikator;
-    const idJavnegaObjekta = this.mojElektroService.mojElektroSignal()?.idJavnegaObjekta;
-    
-    if (!enotniIdentifikator) {
-      this.error = 'No merilno mesto selected';
-      return;
-    }
-    if (!idJavnegaObjekta) {
-      this.error = 'No javni objekt associated with selected merilno mesto';
-      return;
-    }
-    this.isLoading = true;
-
-    this.fetchDataService.fetchEchartData(
-      idJavnegaObjekta,
-      enotniIdentifikator,
+    fetchEchartData(
+      this.fetchDataService,
+      this.mojElektroService,
+      this.selectedRange,
       this.sifraAgregacija,
       this.sifraEnergijaMoc,
       this.letoOD,
       this.letoDO,
       this.mesecOD,
-      this.mesecDO
-    ).subscribe({
-      next: (data: IEchartData) => {
-        this.chartData = data;
-        this.isLoading = false;
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.error = err?.message ?? 'Error loading data';
-        this.isLoading = false;
-      }
-    });
+      this.mesecDO,
+      (loading) => { this.isLoading = loading; },
+      (error) => { this.error = error; },
+      (data) => { this.chartData = data; }
+    );
   }
 }

@@ -12,10 +12,11 @@ import { EgrafDnevniComponent } from "../egraf-dnevni/egraf-dnevni.component";
 import { IRange } from '../../_models/i-range';
 import { MojElektroRead15Component } from '../moj-elektro-read15/moj-elektro-read15.component';
 import { EgrafPoUrahComponent } from "../egraf-po-urah/egraf-po-urah.component";
+import { EgrafPoTednihComponent } from "../egraf-po-tednih/egraf-po-tednih.component";
 
 @Component({
   selector: 'app-moj-elektro-card',
-  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule, EgrafDnevniComponent, MojElektroRead15Component, EgrafPoUrahComponent],  // RouterLink
+  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule, EgrafDnevniComponent, MojElektroRead15Component, EgrafPoUrahComponent, EgrafPoTednihComponent],  // RouterLink
   templateUrl: './moj-elektro-card.component.html',
   styleUrl: './moj-elektro-card.component.css'
 })

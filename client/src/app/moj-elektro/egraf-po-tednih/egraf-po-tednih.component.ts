@@ -13,13 +13,13 @@ import { fetchEchartData } from '../../_utils/fetch-data-util';
 
 
 @Component({
-  selector: 'app-egraf-po-urah',
+  selector: 'app-egraf-po-tednih',
   standalone: true,
   imports: [CommonModule, BsDatepickerModule, FormsModule, MojElektroGrafComponent],
-  templateUrl: './egraf-po-urah.component.html',
-  styleUrl: './egraf-po-urah.component.css'
+  templateUrl: './egraf-po-tednih.component.html',
+  styleUrl: './egraf-po-tednih.component.css'
 })
-export class EgrafPoUrahComponent implements OnInit {
+export class EgrafPoTednihComponent implements OnInit {
   mojElektroService = inject(MojElektroService);
   fetchDataService = inject(FetchDataService);
   ranges: IRange[] = new RangePreDefinirani().getRanges();
@@ -48,13 +48,13 @@ export class EgrafPoUrahComponent implements OnInit {
 
   // --- hard coded
   public sifraEnergijaMoc: string = "EnergijaAPlus";  // EnergijaAPlus, PrejetaDelovnaMoc
-  public sifraAgregacija: string = "PoLetihPoDnevihPoUrah";  // PoLetihPoMesecih, PoLetihPoTednihPoDnevih, PoLetihPoDnevihPoUrah
+  public sifraAgregacija: string = "PoLetihPoTednihPoDnevih";  // PoLetihPoMesecih, PoLetihPoTednihPoDnevih, PoLetihPoDnevihPoUrah, PoLetihPoMesecihPoBlokih
 
   public letoOD: number = 2022;          // --- hard coded datumOD   datumDO
   public letoDO: number = 2026;
   public mesecOD: number = 1;
   public mesecDO: number = 1;
-
+  
   constructor() {
     // Watch for merilno mesto changes and re-fetch data
     effect(() => {
@@ -111,4 +111,6 @@ export class EgrafPoUrahComponent implements OnInit {
       (data) => { this.chartData = data; }
     );
   }
+
+
 }

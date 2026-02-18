@@ -38,7 +38,7 @@ public class SeedMojElektro15minMeritve
 
         // var path = "Data/Source/MojElektro/15minMeritve2022-2023.xlsx";
         // var path = "Data/Source/MojElektro/3-141747-15minMeritve2024-2025.xlsx";
-        var path = "Data/Source/MojElektro/3-147968-15minMeritve2024.xlsx";
+        var path = "Data/Source/MojElektro/3-8521-15minMeritve2026.xlsx";
 
 
         using var stream = System.IO.File.OpenRead(path);
