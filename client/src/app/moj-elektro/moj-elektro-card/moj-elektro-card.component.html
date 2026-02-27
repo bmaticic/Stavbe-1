@@ -33,35 +33,43 @@
     <tab heading="Primerjalno po mesecih" [active]="true" (selectTab)="onTabSelect(0)">
         @if(mojElektroService.activeTabSignal().valueOf() === 0)
         {
-            <app-egraf-dnevni></app-egraf-dnevni>
+        <app-egraf-dnevni></app-egraf-dnevni>
         }
     </tab>
     <tab heading="Primerjalno po tednih" (selectTab)="onTabSelect(1)">
         @if(mojElektroService.activeTabSignal().valueOf() === 1)
         {
-            <app-egraf-po-tednih></app-egraf-po-tednih>
+        <app-egraf-po-tednih></app-egraf-po-tednih>
         }
     </tab>
     <tab heading="Primerjalno po urah" (selectTab)="onTabSelect(2)">
-        <h4>Tab signal je: {{mojElektroService.activeTabSignal()}}</h4>
         @if(mojElektroService.activeTabSignal().valueOf() === 2)
         {
-            <app-egraf-po-urah></app-egraf-po-urah>
+        <app-egraf-po-urah></app-egraf-po-urah>
+        }
+    </tab>
+    <tab heading="Primerjalno po blokih" (selectTab)="onTabSelect(3)">
+        @if(mojElektroService.activeTabSignal().valueOf() === 3)
+        {
+        <app-egraf-po-blokih></app-egraf-po-blokih>
         }
     </tab>
 
-    <tab heading="15min podatki" (selectTab)="onTabSelect(3)">
-        <h4>Tab signal za 15min podatki: {{mojElektroService.activeTabSignal()}}</h4>
+
+    <tab heading="15min podatki" (selectTab)="onTabSelect(4)">
+        @if(mojElektroService.activeTabSignal().valueOf() === 4)
+        {
+        <app-egraf-vsi-podatki></app-egraf-vsi-podatki>
+        }
+    </tab>
+    <tab heading="15min podatki po časovnih blokih" (selectTab)="onTabSelect(5)">
         <!-- Add your map component here -->
     </tab>
-    <tab heading="15min podatki po časovnih blokih" (selectTab)="onTabSelect(4)">
-        <!-- Add your map component here -->
-    </tab>
-    <tab heading="Časovna porazdelitev po letih" (selectTab)="onTabSelect(5)">
+    <tab heading="Časovna porazdelitev po letih" (selectTab)="onTabSelect(6)">
         <!-- Add your map component here -->
     </tab>
 
-    <tab heading="Dostop do zunanje aplikacije Moj-elektro" (selectTab)="onTabSelect(6)">
+    <tab heading="Dostop do zunanje aplikacije Moj-elektro" (selectTab)="onTabSelect(7)">
         <h4>Dostop do zunanje app Moj-elektro za merilno mesto {{mojElektroMerilnoMesto.enotniIdentifikator}}</h4>
         <app-moj-elektro-read15></app-moj-elektro-read15>
     </tab>

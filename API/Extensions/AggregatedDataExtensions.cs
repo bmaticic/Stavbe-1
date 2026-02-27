@@ -17,7 +17,7 @@ public static class AggregatedDataExtensions
 
     public static IEnumerable<AggregatedData<TGroup>> ExtendWithEmptyData<TGroup>(this IEnumerable<AggregatedData<TGroup>> data, IEnumerable<TGroup> range)
     {
-        return data.Union(range.Except(data.Select(x => x.Group)).Select(x => new AggregatedData<TGroup>
+        return data.Union(range.Except(data.Select(x => x.Group)!).Select(x => new AggregatedData<TGroup>
         {
             Count = 0,
             Sum = 0,

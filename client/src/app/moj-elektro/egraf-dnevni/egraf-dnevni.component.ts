@@ -48,7 +48,7 @@ export class EgrafDnevniComponent implements OnInit {
 
   // --- hard coded
   public sifraEnergijaMoc: string = "EnergijaAPlus";  // EnergijaAPlus, PrejetaDelovnaMoc
-  public sifraAgregacija: string = "PoLetihPoMesecih";  // PoLetihPoMesecih, PoLetihPoTednihPoDnevih, PoLetihPoDnevihPoUrah
+  public sifraAgregacija: string = "PoLetihPoMesecih";  // PoLetihPoMesecih, PoLetihPoTednihPoDnevih, PoLetihPoDnevihPoUrah, PoLetihPoMesecihPoBlokih
 
 
   public letoOD: number = 2022;          // --- hard coded datumOD   datumDO

@@ -123,7 +123,10 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
                                     blokIntervali.Add(a);
                                 }
 
-                                var jeBlok = status.Value.Where(x => x.Group.ToString().Substring(6, 2) == blok.ToString("00"));
+                                var jeBlok = status.Value.Where(x =>
+                                    x.Group.ToString().Length >= 8 &&
+                                    x.Group.ToString().Substring(6, 2) == blok.ToString("00")
+                                );
                                 if (jeBlok != null)
                                 {
                                     jeBlok = jeBlok.ExtendWithEmptyData(blokIntervali).ToList();
@@ -137,6 +140,7 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
 
 
                                 }
+                                else continue;
 
                             }
 
@@ -286,7 +290,9 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
                             for (int indexLeta = datumOD.Year; indexLeta < datumDO.Year; indexLeta++)
                             {
                                 // ekstrahiramo leto
-                                string leto_pom = vsiTedniLine.Value[indexDnivLetu].Group.ToString().Substring(0, 4);
+                                string leto_pom = vsiTedniLine.Value[indexDnivLetu].Group.ToString().Length >= 4
+                                    ? vsiTedniLine.Value[indexDnivLetu].Group.ToString().Substring(0, 4)
+                                    : string.Empty;
                                 int leto_pomInt = Convert.ToInt32(leto_pom);
                                 int steviloDniVLetu = calendar.GetDaysInYear(leto_pomInt);
 
@@ -301,7 +307,7 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
                                     {
                                         Type = leto_pom + "-" + iTeden.ToString("00"),
                                         TypeOriginal = mojEleMermesta[vsiTedniLine.Key].ToString(),
-                                        Values = enTedenLine.Select(x => (decimal)x.Sum)
+                                        Values = enTedenLine.Select(x => (decimal)x.Sum.GetValueOrDefault())
                                     });
                                 }
                                 indexDnivLetu = indexDnivLetu + steviloDniVLetu;
@@ -316,7 +322,9 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
                     var _legendaOriginal = new List<string>();
                     foreach (var line in stats.Lines)
                     {
-                        if (!_legendaOriginal.Contains(line.TypeOriginal))
+                        if (line != null
+                            && line.TypeOriginal != null
+                            && !_legendaOriginal.Contains(line.TypeOriginal))
                             _legendaOriginal.Add(line.TypeOriginal);
                     }
                     stats.LegendaOriginal = _legendaOriginal;
@@ -379,7 +387,7 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
                                     {
                                         Type = leto_pom + "-" + iDan.ToString("0000"),
                                         TypeOriginal = mojEleMermesta[vsiDneviLine.Key].ToString(),
-                                        Values = enDanLine.Select(x => (decimal)x.Sum)
+                                        Values = enDanLine.Select(x => (decimal)x.Sum.GetValueOrDefault())
                                     });
                                 }
                                 indexDnivLetu = indexDnivLetu + steviloDniVLetu;
@@ -394,8 +402,11 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
                     var _legendaOriginal = new List<string>();
                     foreach (var line in stats.Lines)
                     {
-                        if (!_legendaOriginal.Contains(line.TypeOriginal))
+                        if (line != null
+                            && line.TypeOriginal != null
+                            && !_legendaOriginal.Contains(line.TypeOriginal))
                             _legendaOriginal.Add(line.TypeOriginal);
+
                     }
                     stats.LegendaOriginal = _legendaOriginal;
 

@@ -24,10 +24,6 @@ export class MojElektroService {
     return this.http.get<MojElektroMerilnoMesto[]>(this.baseUrl + 'mojElektro/moj-elektro-merilna-mesta/' + naziv);
   }
 
-  // podatki za Egraf za moj-elektro merilno mesto
-  getPodatkeZaMojElektroMerilnoMesto(enotniIdentifikator: string) {
-    return this.http.get<Egraf>(this.baseUrl + 'mojElektro/moj-elektro-merilno-mesto/' + enotniIdentifikator);
-  }
 
   // seznam vseh moj-elektro merilnih mest v bazi
   getMojElektroMerilnaMestaVsa() {
@@ -42,20 +38,27 @@ export class MojElektroService {
 
   // različno agregirani podatki da pridobim Egraf za moj-elektro za eno merilno mesto
   get_agregirane_PodatkeZaMojElektroMerilnoMesto(idJavnegaObjekta: number, enotniIdentifikator: string, aggregation: string, sifraEnergijaMoc: string,
-                letoOD: number, letoDO: number, mesecOD: number, mesecDO: number): Observable<any> {
+    letoOD: number, letoDO: number, mesecOD: number, mesecDO: number): Observable<any> {
 
     const params = new HttpParams()
-    .set('idJavnegaObjekta', `${idJavnegaObjekta}`)
-    .set('enotniIdentifikator', `${enotniIdentifikator}`)
-    .set('aggregation', `${aggregation}`)
-    .set('sifraEnergijaMoc', `${sifraEnergijaMoc}`)
-    .set('letoOD', `${letoOD}`)
-    .set('letoDO', `${letoDO}`)
-    .set('mesecOD', `${mesecOD}`)
-    .set('mesecDO', `${mesecDO}`);
+      .set('idJavnegaObjekta', `${idJavnegaObjekta}`)
+      .set('enotniIdentifikator', `${enotniIdentifikator}`)
+      .set('aggregation', `${aggregation}`)
+      .set('sifraEnergijaMoc', `${sifraEnergijaMoc}`)
+      .set('letoOD', `${letoOD}`)
+      .set('letoDO', `${letoDO}`)
+      .set('mesecOD', `${mesecOD}`)
+      .set('mesecDO', `${mesecDO}`);
 
-    return this.http.get<Egraf>(this.baseUrl + 'mojElektroAgregirani/moj-elektro-agregirani-za-egraf' , { params });
+    return this.http.get<Egraf>(this.baseUrl + 'mojElektroAgregirani/moj-elektro-agregirani-za-egraf', { params });
   }
+  
+
+  // podatki za Egraf za moj-elektro merilno mesto
+  getPodatkeZaMojElektroMerilnoMesto(enotniIdentifikator: string) {
+    return this.http.get<Egraf>(this.baseUrl + 'mojElektro/moj-elektro-merilno-mesto/' + enotniIdentifikator);
+  }
+
 
 
 }

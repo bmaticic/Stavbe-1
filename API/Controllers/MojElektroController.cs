@@ -20,14 +20,6 @@ public class MojElektroController(IMojElektroRepository mojElektroRepository) : 
         return Ok(mojEleMerMesta);
     }
 
-    // struktura za Egraf za moj elektro merilno mesto po enotnem identifikatorju
-    [HttpGet("moj-elektro-merilno-mesto/{enotniIdentifikator}")]
-    public async Task<ActionResult<Egraf>> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator)
-    {
-        var egraf = await mojElektroRepository.GetPodatkeZaMojElektroMerilnoMesto(enotniIdentifikator);
-        if (egraf == null) return NotFound();
-        return Ok(egraf);
-    }
 
     [HttpGet("moj-elektro-merilna-mesta-vsa")]
     public async Task<ActionResult<MojElektroMerilnoMestoDto[]>> GetVsaMojElektroMerilnaMesta()
@@ -51,7 +43,13 @@ public class MojElektroController(IMojElektroRepository mojElektroRepository) : 
 
 
 
-
-
+    // struktura za Egraf za moj elektro merilno mesto po enotnem identifikatorju
+    [HttpGet("moj-elektro-merilno-mesto/{enotniIdentifikator}")]
+    public async Task<ActionResult<Egraf>> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator)
+    {
+        var egraf = await mojElektroRepository.GetPodatkeZaMojElektroMerilnoMesto(enotniIdentifikator);
+        if (egraf == null) return NotFound();
+        return Ok(egraf);
+    }
 
 }

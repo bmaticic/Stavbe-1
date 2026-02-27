@@ -84,6 +84,7 @@ export class MojElektroGrafComponent {
           ...this.legendConfig,
           data: this.eChartsEnergijaAPlus?.legend
         },
+
         toolbox: {
           show: true,
           feature: {
