@@ -34,6 +34,22 @@ export class EchartGrafComponent {
     const change = changes['selectedMerilnoMestoGraf'];
     if (!change.isFirstChange() && this.selectedMerilnoMestoGraf) {
 
+      // Define color palette for indices 0-5
+      const colorPalette = [
+        '#1976d2', // blue
+        '#388e3c', // green
+        '#fbc02d', // yellow
+        '#d32f2f', // red
+        '#7b1fa2', // purple
+        '#00838f'  // teal
+      ];
+
+      // Determine color index (default to 0 if not present)
+      let colorIndex = 0;
+      if (typeof this.selectedMerilnoMestoGraf?.bloki === 'number' && this.selectedMerilnoMestoGraf.bloki >= 0 && this.selectedMerilnoMestoGraf.bloki <= 5) {
+        colorIndex = this.selectedMerilnoMestoGraf.bloki;
+      }
+
       this.chartOption = {
         tooltip: {
           trigger: 'axis',
@@ -45,9 +61,6 @@ export class EchartGrafComponent {
           left: 'center',
           text: 'Osnovni 15 minutni podatki'
         },
-
-
-
         toolbox: {
           show: true,
           feature: {
@@ -59,7 +72,6 @@ export class EchartGrafComponent {
             },
           },
         },
-
         xAxis: {
           type: 'category',
           data: this.selectedMerilnoMestoGraf.axisXLabele,
@@ -71,12 +83,14 @@ export class EchartGrafComponent {
             },
           },
         },
-
         series: [
           {
             data: this.selectedMerilnoMestoGraf.vrednosti,
             type: 'bar',
             smooth: true,
+            itemStyle: {
+              color: colorPalette[colorIndex]
+            }
           },
         ],
       };

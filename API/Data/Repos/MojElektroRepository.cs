@@ -40,6 +40,7 @@ public class MojElektroRepository(DataContext context, IMapper mapper) : IMojEle
             .ToArray();
     }
 
+    // vrne Egraf za eno merilno mesto po enotnem identifikatorju iz MojElektro
     public async Task<Egraf> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator)
     {
         var mmesto = await context.MojElektroMerilnaMesta
@@ -48,15 +49,55 @@ public class MojElektroRepository(DataContext context, IMapper mapper) : IMojEle
             .SingleOrDefaultAsync();
         if (mmesto == null || mmesto.Meritve15min?.Count == 0) return new Egraf();
 
+
         var vrednosti = mmesto.Meritve15min?.Select(x => x.Energija_A_plus).ToList();
         var axisXLabele = mmesto.Meritve15min?.Select(x => x.TimeStamp).ToList();
+        var bloki = mmesto.Meritve15min?.Select(x => x.Blok).ToList();
 
+        // Fill gaps in AxisXLabele with missing 15-min timestamps and 0.0 values in Vrednosti and bloki
+        if (axisXLabele != null && vrednosti != null && bloki != null && axisXLabele.Count > 1)
+        {
+            var filledAxisXLabele = new List<DateTime>();
+            var filledVrednosti = new List<decimal>();
+            var filledBloki = new List<int>();
+            filledAxisXLabele.Add(axisXLabele[0]);
+            filledVrednosti.Add(vrednosti[0]);
+            filledBloki.Add(bloki[0]);
+            for (int i = 1; i < axisXLabele.Count; i++)
+            {
+                var prev = axisXLabele[i - 1];
+                var curr = axisXLabele[i];
+                var prevVal = vrednosti[i - 1];
+                var currVal = vrednosti[i];
+                var prevBlok = bloki[i - 1];
+                var currBlok = bloki[i];
+                var diff = curr - prev;
+                while (diff > TimeSpan.FromMinutes(15))
+                {
+                    prev = prev.AddMinutes(15);
+                    filledAxisXLabele.Add(prev);
+                    filledVrednosti.Add(0);
+                    filledBloki.Add(0);
+                    diff = curr - prev;
+                }
+                filledAxisXLabele.Add(curr);
+                filledVrednosti.Add(currVal);
+                filledBloki.Add(currBlok);
+            }
+            axisXLabele = filledAxisXLabele;
+            vrednosti = filledVrednosti;
+            bloki = filledBloki;
+        }
         return new Egraf
         {
-            Vrednosti = vrednosti?.ToList(), // Prvih 96 vrednosti
-            AxisXLabele = axisXLabele?.ToList(), // Prvih 96 časovnih oznak
+            Vrednosti = vrednosti?.ToList(),
+            AxisXLabele = axisXLabele?.ToList(),
+            Bloki = bloki?.ToList()
         };
     }
+
+
+
 
     public async Task<MojElektroMerilnoMestoDto[]> GetVsaMojElektroMerilnaMesta()
     {
