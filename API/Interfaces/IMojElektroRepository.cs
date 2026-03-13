@@ -13,6 +13,7 @@ public interface IMojElektroRepository
     Task<MojElektroMerilnoMestoDto> GetMojElektroMerilnoMesto(string enotniIdentifikator);
 
     Task<Egraf> GetPodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator);
+    Task<Egraf> GetGrupiranePodatkeZaMojElektroMerilnoMesto(string enotniIdentifikator, string groupBy);
     
 
 

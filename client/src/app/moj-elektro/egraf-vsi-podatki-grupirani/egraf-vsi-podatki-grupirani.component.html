@@ -1,0 +1,14 @@
+<div class="container">
+  <h3>Grupirani podatki za merilno mesto</h3>
+
+  <div class="form-group">
+    <label for="groupingSelect">Izberi skupino:</label>
+    <select id="groupingSelect" class="form-control" [(ngModel)]="selectedGrouping" (ngModelChange)="onGroupingChange()">
+      <option *ngFor="let option of groupingOptions" [value]="option.value">{{ option.label }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="selectedMerilnoMestoGraf">
+    <app-echart-graf [selectedMerilnoMestoGraf]="selectedMerilnoMestoGraf"></app-echart-graf>
+  </div>
+</div>

@@ -44,11 +44,17 @@ export class EchartGrafComponent {
         '#00838f'  // teal
       ];
 
-      // Determine color index (default to 0 if not present)
-      let colorIndex = 0;
-      if (typeof this.selectedMerilnoMestoGraf?.bloki === 'number' && this.selectedMerilnoMestoGraf.bloki >= 0 && this.selectedMerilnoMestoGraf.bloki <= 5) {
-        colorIndex = this.selectedMerilnoMestoGraf.bloki;
-      }
+      // Map each value to its color using bloki[]
+      const dataWithColor = (this.selectedMerilnoMestoGraf.vrednosti || []).map((val, i) => ({
+        value: val,
+        itemStyle: {
+          color: colorPalette[
+            (this.selectedMerilnoMestoGraf?.bloki && typeof this.selectedMerilnoMestoGraf.bloki[i] === 'number')
+              ? this.selectedMerilnoMestoGraf.bloki[i]
+              : 0
+          ]
+        }
+      }));
 
       this.chartOption = {
         tooltip: {
@@ -65,7 +71,7 @@ export class EchartGrafComponent {
           show: true,
           feature: {
             magicType: {
-              type: ['bar', 'line', 'stack']
+              type: ['bar']
             },
             dataZoom: {
               yAxisIndex: 'none',
@@ -85,12 +91,9 @@ export class EchartGrafComponent {
         },
         series: [
           {
-            data: this.selectedMerilnoMestoGraf.vrednosti,
+            data: dataWithColor,
             type: 'bar',
-            smooth: true,
-            itemStyle: {
-              color: colorPalette[colorIndex]
-            }
+            smooth: true
           },
         ],
       };

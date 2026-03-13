@@ -15,10 +15,12 @@ import { EgrafPoUrahComponent } from "../egraf-po-urah/egraf-po-urah.component";
 import { EgrafPoTednihComponent } from "../egraf-po-tednih/egraf-po-tednih.component";
 import { EgrafPoBlokihComponent } from "../egraf-po-blokih/egraf-po-blokih.component";
 import { EgrafVsiPodatkiComponent } from "../egraf-vsi-podatki/egraf-vsi-podatki.component";
+import { EgrafVsiPodatkiGrupiraniComponent } from '../egraf-vsi-podatki-grupirani/egraf-vsi-podatki-grupirani.component';
 
 @Component({
   selector: 'app-moj-elektro-card',
-  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule, EgrafDnevniComponent, MojElektroRead15Component, EgrafPoUrahComponent, EgrafPoTednihComponent, EgrafPoBlokihComponent, EgrafVsiPodatkiComponent],  // RouterLink
+  imports: [TabsModule, GalleryModule, CommonModule, BsDatepickerModule, FormsModule, EgrafDnevniComponent, MojElektroRead15Component, EgrafPoUrahComponent, EgrafPoTednihComponent, 
+    EgrafPoBlokihComponent, EgrafVsiPodatkiComponent, EgrafVsiPodatkiGrupiraniComponent],  // RouterLink
   templateUrl: './moj-elektro-card.component.html',
   styleUrl: './moj-elektro-card.component.css'
 })

@@ -62,8 +62,11 @@
         <app-egraf-vsi-podatki></app-egraf-vsi-podatki>
         }
     </tab>
-    <tab heading="15min podatki po časovnih blokih" (selectTab)="onTabSelect(5)">
-        <!-- Add your map component here -->
+    <tab heading="15min podatki grupirani po urah, po dnevih, po mesecih" (selectTab)="onTabSelect(5)">
+        @if(mojElektroService.activeTabSignal().valueOf() === 5)
+        {
+        <app-egraf-vsi-podatki-grupirani></app-egraf-vsi-podatki-grupirani>
+        }
     </tab>
     <tab heading="Časovna porazdelitev po letih" (selectTab)="onTabSelect(6)">
         <!-- Add your map component here -->

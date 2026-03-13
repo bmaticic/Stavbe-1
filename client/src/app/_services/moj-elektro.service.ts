@@ -52,11 +52,19 @@ export class MojElektroService {
 
     return this.http.get<Egraf>(this.baseUrl + 'mojElektroAgregirani/moj-elektro-agregirani-za-egraf', { params });
   }
-  
+
 
   // podatki za Egraf za moj-elektro merilno mesto
   getPodatkeZaMojElektroMerilnoMesto(enotniIdentifikator: string) {
     return this.http.get<Egraf>(this.baseUrl + 'mojElektro/moj-elektro-merilno-mesto/' + enotniIdentifikator);
+  }
+
+  // podatki za Egraf za moj-elektro merilno mesto, grouped by time period
+  getPodatkeZaMojElektroMerilnoMestoGroupedBy(enotniIdentifikator: string, groupedBy: string) {
+    const params = new HttpParams()
+      .set('enotniIdentifikator', `${enotniIdentifikator}`)
+      .set('groupedBy', `${groupedBy}`);
+    return this.http.get<Egraf>(this.baseUrl + 'mojElektro/moj-elektro-merilno-mesto-grouped' , { params });
   }
 
 

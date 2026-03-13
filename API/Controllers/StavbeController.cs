@@ -54,7 +54,7 @@ public class StavbeController(IStavbeRepository stavbeRepository, IMapper mapper
 
     // geo tocke stavbe
     [HttpGet("geo-tocke/{nazivStavbe}")]
-    public async Task<ActionResult<GeoTockaDto[]>> GetGeoTocke(string nazivStavbe)
+    public async Task<ActionResult<Poligon>> GetGeoTocke(string nazivStavbe)
     {
         var stavba = await stavbeRepository.GetGeoTocke(nazivStavbe);
         if (stavba == null) return NotFound();

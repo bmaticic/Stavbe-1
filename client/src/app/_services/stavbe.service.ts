@@ -46,7 +46,6 @@ export class StavbeService {
       params = params.append('pageNumber', pageNumber);
       params = params.append('pageSize', pageSize);
     }
-
     return params;
   }
 
@@ -75,7 +74,8 @@ export class StavbeService {
     return this.http.get<Egraf>(this.baseUrl + 'stavbe/merilno-mesto/' + stMerilnegaMesta);
   }
 
-
+  
+  // geo točke
   getGeoTockeStavbe(naziv: string) {
     return this.http.get<Ipoligon>(this.baseUrl + 'stavbe/geo-tocke/' + naziv);
   }
