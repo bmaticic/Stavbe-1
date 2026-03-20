@@ -52,6 +52,13 @@ try
     // await SeedGeoTocke.ImportGeo(context);
     // await SeedMojElektro15minMeritve.Import15minMeritve(context);
     // await SeedOdcitki.ImportElektro(context);
+    // await SeedOdcitki.ImportSmeti(context);
+    // await SeedOdcitki.ImportKpk(context);
+
+    // await SeedToplota.ImportZemPlin(context);
+    // await SeedToplota.ImportPogodbenaToplotaPetrol(context);
+    // await SeedToplota.ImportDrugiEnergenti(context);
+
 }
 catch (Exception ex)
 {

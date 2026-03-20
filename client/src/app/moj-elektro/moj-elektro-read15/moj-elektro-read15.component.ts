@@ -1,3 +1,8 @@
+// MojElektroRead15Component - Pridobivanje podatkov o porabi električne energije v 15-minutnih intervalih
+// iz api vmesnika by Moj-elektro
+
+
+
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { MojElektroApiService } from '../../_services/moj-elektro-api.service';

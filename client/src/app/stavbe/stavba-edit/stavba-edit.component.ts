@@ -5,10 +5,11 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PhotoEditorStavbeComponent } from "../photo-editor-stavbe/photo-editor-stavbe.component";
+import { StavbaGoogleEditComponent } from "../stavba-google-edit/stavba-google-edit.component";
 
 @Component({
   selector: 'app-stavba-edit',
-  imports: [TabsModule, FormsModule, PhotoEditorStavbeComponent],
+  imports: [TabsModule, FormsModule, PhotoEditorStavbeComponent, StavbaGoogleEditComponent],
   templateUrl: './stavba-edit.component.html',
   styleUrl: './stavba-edit.component.css'
 })

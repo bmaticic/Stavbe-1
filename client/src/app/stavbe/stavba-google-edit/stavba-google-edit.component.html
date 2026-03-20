@@ -1,0 +1,33 @@
+<div class="map-toolbar" style="margin-bottom: 10px; display:flex; gap:8px; align-items:center;">
+  <button class="btn btn-primary" (click)="startAddPolygon()" [disabled]="addingPolygon">Add New Polygon</button>
+  <button class="btn btn-success" (click)="finishAddPolygon()" [disabled]="!addingPolygon">Finish Polygon</button>
+  <button class="btn btn-secondary" (click)="cancelAddPolygon()" [disabled]="!addingPolygon">Cancel</button>
+  <button class="btn btn-danger" (click)="deleteSelectedPolygon()" [disabled]="selectedPolygonIndex === null">Delete Selected Polygon</button>
+  <span *ngIf="selectedPolygonIndex !== null">Selected Polygon: {{ selectedPolygonIndex }}</span>
+  <span *ngIf="selectedVertex">Selected Vertex: Polygon {{ selectedVertex.polygonIndex }}, Point {{ selectedVertex.vertexIndex }}</span>
+</div>
+
+<google-map height="630px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
+  (mapClick)="onMapClick($event)">
+
+  <map-polygon #polygonElem *ngFor="let pol of poligon?.noviObodiLatLng; let i = index" [paths]="pol" [options]="getPolygonOptions(i)"
+    (polygonClick)="selectPolygon(i)">
+    <!-- Vertex markers -->
+    <map-marker *ngFor="let vertex of pol; let j = index"
+      [position]="vertex"
+      [options]="getVertexMarkerOptions(i, j)"
+      (markerClick)="selectVertex(i, j)"
+      (markerMouseover)="onVertexMouseOver(i, j)"
+      (markerMouseout)="onVertexMouseOut()"
+      (markerDragend)="onVertexDragEnd(i, j, $event)">
+    </map-marker>
+  </map-polygon>
+
+  <map-polygon *ngIf="addingPolygon && newPolygonPoints.length > 0"
+    [paths]="newPolygonPoints" [options]="newPolyOptions"></map-polygon>
+
+</google-map>
+
+<div *ngIf="clickedLat !== null && clickedLng !== null">
+  <p>Lat: {{clickedLat}}, Lng: {{clickedLng}}</p>
+</div>
