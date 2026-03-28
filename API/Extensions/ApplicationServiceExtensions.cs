@@ -25,7 +25,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IStavbeRepository, StavbeRepository>();
         services.AddScoped<IMojElektroRepository, MojElektroRepository>();
         services.AddScoped<IMojElektroAgregiraniRepository, MojElektroAgregiraniRepository>();
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddAutoMapper(typeof(Helpers.AutoMapperProfiles).Assembly);
 
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 

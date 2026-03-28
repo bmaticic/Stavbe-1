@@ -48,7 +48,7 @@
         <app-egraf-po-urah></app-egraf-po-urah>
         }
     </tab>
-    <tab heading="Primerjalno po blokih" (selectTab)="onTabSelect(3)">
+    <tab heading="Po blokih" (selectTab)="onTabSelect(3)">
         @if(mojElektroService.activeTabSignal().valueOf() === 3)
         {
         <app-egraf-po-blokih></app-egraf-po-blokih>
@@ -62,13 +62,13 @@
         <app-egraf-vsi-podatki></app-egraf-vsi-podatki>
         }
     </tab>
-    <tab heading="15min podatki grupirani po urah, po dnevih, po mesecih" (selectTab)="onTabSelect(5)">
+    <tab heading="15min podatki grupirani" (selectTab)="onTabSelect(5)">
         @if(mojElektroService.activeTabSignal().valueOf() === 5)
         {
         <app-egraf-vsi-podatki-grupirani></app-egraf-vsi-podatki-grupirani>
         }
     </tab>
-    <tab heading="Časovna porazdelitev po letih" (selectTab)="onTabSelect(6)">
+    <tab heading="Primerjava z drugim merilnim mestom" (selectTab)="onTabSelect(6)">
         <!-- Add your map component here -->
     </tab>
 
