@@ -6,12 +6,12 @@ import * as echarts from 'echarts/core';
 // import necessary echarts components
 import { BarChart } from 'echarts/charts';
 import { LineChart } from 'echarts/charts';
-import { GridComponent, LegendComponent, TitleComponent, ToolboxComponent, TooltipComponent } from 'echarts/components';
+import { GridComponent, LegendComponent, TitleComponent, ToolboxComponent, TooltipComponent, DataZoomComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { CommonModule } from '@angular/common';
 import { Egraf } from '../../_models/egraf';
 import { IEchartData } from '../../_models/echart-data';
-echarts.use([BarChart, LineChart, GridComponent, TitleComponent, ToolboxComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
+echarts.use([BarChart, LineChart, GridComponent, TitleComponent, ToolboxComponent, TooltipComponent, LegendComponent, DataZoomComponent, CanvasRenderer]);
 
 @Component({
   selector: 'app-echart-graf',
@@ -78,6 +78,17 @@ export class EchartGrafComponent {
             },
           },
         },
+        dataZoom: [
+          {
+            type: 'slider',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+            bottom: 10,
+            handleSize: '100%',
+            showDetail: false
+          }
+        ],
         xAxis: {
           type: 'category',
           data: this.selectedMerilnoMestoGraf.axisXLabele,
