@@ -65,7 +65,7 @@ export class EchartGrafComponent {
         },
         title: {
           left: 'center',
-          text: 'Osnovni 15 minutni podatki'
+          text: 'Osnovni podatki'
         },
         toolbox: {
           show: true,

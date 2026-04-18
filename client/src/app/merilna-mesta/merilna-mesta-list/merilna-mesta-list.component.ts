@@ -9,7 +9,7 @@ import { EchartGrafComponent } from '../echart-graf/echart-graf.component';
 
 @Component({
   selector: 'app-merilna-mesta-list',
-  imports: [ButtonsModule, FormsModule, CollapseDirective, EchartGrafComponent],
+  imports: [ButtonsModule, FormsModule, EchartGrafComponent],   //  CollapseDirective,
   templateUrl: './merilna-mesta-list.component.html',
   styleUrl: './merilna-mesta-list.component.css'
 })
@@ -17,7 +17,7 @@ export class MerilnaMestaListComponent implements OnInit {
   stavbeService = inject(StavbeService);
   merilnaMesta: MerilnoMesto[] = [];
 
-  isCollapsed = false;
+  // isCollapsed = false;
   selectedMerilnoMestoGraf: Egraf | null = null;
 
   ngOnInit(): void {
@@ -42,7 +42,7 @@ export class MerilnaMestaListComponent implements OnInit {
           this.selectedMerilnoMestoGraf = data; // Store the data for the selected merilno mesto
          // console.log(data);
   
-          this.isCollapsed = !this.isCollapsed; // Toggle collapse state
+          // this.isCollapsed = !this.isCollapsed; // Toggle collapse state
         }
       });
     }

@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
-import { MessagesComponent } from './messages/messages.component';
+// import { MessagesComponent } from './messages/messages.component';
 
 import { authGuard } from './_guards/auth.guard';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
@@ -50,7 +50,7 @@ export const routes: Routes = [
             { path: 'moj-elektro/:enotniIdentifikator', component: MojElektroCardComponent },
             { path: 'moj-elektro/edit', component: MojElektroCardComponent },
 
-            { path: 'messages', component: MessagesComponent },
+            // { path: 'messages', component: MessagesComponent },
             { path: 'admin', component: AdminPanelComponent, canActivate: [adminGuard] }
         ]
     },
