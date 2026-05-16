@@ -33,7 +33,6 @@
               "node_modules/ngx-spinner/animations/line-scale-party.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-
               "src/styles.css"
             ],
             "scripts": []
@@ -43,8 +42,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1.5MB",
+                  "maximumError": "2.5MB"
                 },
                 {
                   "type": "anyComponentStyle",

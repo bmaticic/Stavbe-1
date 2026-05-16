@@ -31,6 +31,7 @@ const seriesListEnergijaAPlus: SeriesOption[] = [];
 export class MojElektroGrafComponent {
   // Input to receive selected merilno mesto data prirejeno za Echarts
   @Input() eChartsEnergijaAPlus: IEchartData | null = null;
+  @Input() trimMode: 'none' | 'first4' | 'last2' = 'none';
   @Input() lineStyle: any = {
     width: 0.4,
     opacity: 0.7
@@ -54,12 +55,14 @@ export class MojElektroGrafComponent {
       this.eChartsEnergijaAPlus.linesData.forEach(element => {
 
         if (this.eChartsEnergijaAPlus?.legendaOriginal[index] == labela || labela == "vse") {
+          const legendName = this.eChartsEnergijaAPlus?.legend[index];
+          const trimmedName = this.getTrimmedName(legendName);
           const seriesConfig: any = {
             type: 'line',
             lineStyle: this.lineStyle,
             smooth: true,
             data: element,
-            name: this.eChartsEnergijaAPlus?.legend[index],
+            name: trimmedName,
             //    animationDelay: (idx: number) => idx * 100,
 
             animationDelay: function (idx: number) { return idx * 20; },
@@ -82,7 +85,7 @@ export class MojElektroGrafComponent {
         },
         legend: {
           ...this.legendConfig,
-          data: this.eChartsEnergijaAPlus?.legend
+          data: this.eChartsEnergijaAPlus?.legend.map(item => this.getTrimmedName(item))
         },
 
         toolbox: {
@@ -131,7 +134,17 @@ export class MojElektroGrafComponent {
     }
   }
 
-
-
+  private getTrimmedName(name: string | undefined): string | undefined {
+    if (!name) return name;
+    switch (this.trimMode) {
+      case 'first4':
+        return "Leto " + name.substring(0, 4);
+      case 'last2':
+        return "Blok " + name.substring(name.length - 1);
+      case 'none':
+      default:
+        return name;
+    }
+  }
 }
 

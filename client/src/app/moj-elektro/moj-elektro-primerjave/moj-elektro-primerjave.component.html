@@ -1,0 +1,36 @@
+<h2>Primerjave Moj Elektro Merilna Mesta</h2>
+<div class="row">
+    <table class="table table-hover mt-3" style="cursor: pointer;">
+        <thead>
+            <tr>
+                <th style="width: 5%;">Izberi</th>
+                <th style="width: 20%;">Stavba</th>
+                <th style="width: 10%;">Enotni Identifikator</th>
+                <th style="width: 10%;">GsrnMM</th>
+                <th style="width: 20%;">Naziv</th>
+                <th style="width: 20%;">Dobavitelj</th>
+                <th style="width: 10%;">RTP</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (merMesto of mojElektroMerilnaMesta; track $index) {
+            <tr>
+                <td>
+                    <input type="checkbox"
+                           [checked]="isSelected(merMesto.enotniIdentifikator)"
+                           (change)="onCheckboxChange(merMesto.enotniIdentifikator, $event.target.checked)" />
+                </td>
+                <td routerLink="/moj-elektro/{{merMesto.enotniIdentifikator}}">
+                    <img src="{{ merMesto.photoUrl}}" alt="{{merMesto.sifraJavnegaObjekta}}" class="img-moj-ele" />
+                    {{merMesto.nazivJavnegaObjekta}}
+                </td>
+                <td>{{merMesto.enotniIdentifikator}}</td>
+                <td>{{merMesto.gsrnMM}}</td>
+                <td>{{merMesto.naziv}}</td>
+                <td>{{merMesto.dobavitelj}}</td>
+                <td>{{merMesto.rtp}}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

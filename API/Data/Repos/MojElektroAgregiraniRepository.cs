@@ -289,23 +289,19 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
 
                             for (int indexLeta = datumOD.Year; indexLeta < datumDO.Year; indexLeta++)
                             {
-                                // ekstrahiramo leto
-                                string leto_pom = vsiTedniLine.Value[indexDnivLetu].Group.ToString().Length >= 4
-                                    ? vsiTedniLine.Value[indexDnivLetu].Group.ToString().Substring(0, 4)
-                                    : string.Empty;
-                                int leto_pomInt = Convert.ToInt32(leto_pom);
-                                int steviloDniVLetu = calendar.GetDaysInYear(leto_pomInt);
+                                // int leto_pomInt = Convert.ToInt32(indexLeta);
+                                int steviloDniVLetu = calendar.GetDaysInYear(indexLeta);
 
                                 // ugotovimo stevilko tedna za zadnji dan v tem letu, kar je tudi steviloTednov
-                                int steviloTednov = calendar.GetWeekOfYear(new DateTime(leto_pomInt, 12, 31), CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                                int steviloTednov = calendar.GetWeekOfYear(new DateTime(indexLeta, 12, 31), CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
                                 for (int iTeden = 1; iTeden <= steviloTednov; iTeden++)
                                 {
-                                    string leto_teden = leto_pom + iTeden.ToString("00");
+                                    string leto_teden = indexLeta + iTeden.ToString("00");
                                     var enTedenLine = vsiTedniLine.Value.Where(x => x.Group.ToString().Substring(0, 6) == leto_teden);
                                     stats.Lines.Add(new ChartDataDTO<decimal>
                                     {
-                                        Type = leto_pom + "-" + iTeden.ToString("00"),
+                                        Type = indexLeta + "-" + iTeden.ToString("00"),
                                         TypeOriginal = mojEleMermesta[vsiTedniLine.Key].ToString(),
                                         Values = enTedenLine.Select(x => (decimal)x.Sum.GetValueOrDefault())
                                     });
@@ -369,13 +365,13 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
                             for (int indexLeta = datumOD.Year; indexLeta < datumDO.Year; indexLeta++)
                             {
                                 // ekstrahiramo leto
-                                string leto_pom = vsiDneviLine.Value[indexDnivLetu].Group.ToString().Substring(0, 4);
-                                int leto_pomInt = Convert.ToInt32(leto_pom);
-
-                                int steviloDniVLetu = calendar.GetDaysInYear(leto_pomInt);
+                                // string leto_pom = vsiDneviLine.Value[indexDnivLetu].Group.ToString().Substring(0, 4);
+                                // int leto_pomInt = Convert.ToInt32(leto_pom);
+                                string leto_pom = indexLeta.ToString();
+                                int steviloDniVLetu = calendar.GetDaysInYear(indexLeta);
 
                                 // ugotovimo stevilko tedna za zadnji dan v tem letu, kar je tudi steviloTednov
-                                int steviloTednov = calendar.GetWeekOfYear(new DateTime(leto_pomInt, 12, 31), CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                                int steviloTednov = calendar.GetWeekOfYear(new DateTime(indexLeta, 12, 31), CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
 
 
@@ -507,3 +503,10 @@ public class MojElektroAgregiraniRepository(DataContext context) : IMojElektroAg
     }
 
 }
+
+
+
+                                // ekstrahiramo leto
+                                // string leto_pom = vsiTedniLine.Value[indexDnivLetu].Group.ToString().Length >= 4
+                                //     ? vsiTedniLine.Value[indexDnivLetu].Group.ToString().Substring(0, 4)
+                                //     : string.Empty;

@@ -65,7 +65,7 @@ export class EchartGrafComponent {
         },
         title: {
           left: 'center',
-          text: 'Osnovni podatki'
+          text: '15 minutne meritve porabe električne energije',
         },
         toolbox: {
           show: true,
