@@ -5,10 +5,11 @@ import { MojElektroMerilnoMesto } from '../../_models/MojElektroMerilnoMesto';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MojElektroPrimerjaveDetailComponent } from './moj-elektro-primerjave-detail.component';
 
 @Component({
   selector: 'app-moj-elektro-primerjave',
-  imports: [RouterLink, FormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, CommonModule, MojElektroPrimerjaveDetailComponent],
   templateUrl: './moj-elektro-primerjave.component.html',
   styleUrl: './moj-elektro-primerjave.component.css'
 })
@@ -17,6 +18,8 @@ export class MojElektroPrimerjaveComponent implements OnInit {
   mojElektroService = inject(MojElektroService);
   mojElektroMerilnaMesta: MojElektroMerilnoMesto[] = [];
   selectedMesta: Set<string> = new Set();
+  selectedMestaArray: string[] = [];
+  showComparison = false;
 
   ngOnInit(): void {
     this.loadMojElektroMerilnaMesta();
@@ -43,5 +46,10 @@ export class MojElektroPrimerjaveComponent implements OnInit {
 
   isSelected(enotniIdentifikator: string): boolean {
     return this.selectedMesta.has(enotniIdentifikator);
+  }
+
+  startComparison(): void {
+    this.selectedMestaArray = Array.from(this.selectedMesta);
+    this.showComparison = true;
   }
 }

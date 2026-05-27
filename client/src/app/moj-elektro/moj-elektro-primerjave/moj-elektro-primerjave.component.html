@@ -34,3 +34,11 @@
         </tbody>
     </table>
 </div>
+
+<div class="d-flex align-items-center gap-3 mt-3">
+  <button class="btn btn-primary" (click)="startComparison()" [disabled]="selectedMesta.size === 0">Start</button>
+  <span *ngIf="selectedMesta.size === 0" class="text-muted">Izberite vsaj eno merilno mesto za primerjavo.</span>
+  <span *ngIf="selectedMesta.size > 0" class="text-success">Izbranih merilnih mest: {{ selectedMesta.size }}</span>
+</div>
+
+<app-moj-elektro-primerjave-detail *ngIf="showComparison" [selectedMesta]="selectedMestaArray"></app-moj-elektro-primerjave-detail>

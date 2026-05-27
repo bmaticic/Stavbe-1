@@ -1,0 +1,9 @@
+.img-moj-ele {
+  max-height: 70px;
+  border: 2px solid gray;
+  display: inline;
+}
+
+.table-active {
+  background-color: #e9ecef;
+}

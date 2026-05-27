@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges, effect } from '@angular/core';
 import { MojElektroService } from '../../_services/moj-elektro.service';
 import { FetchDataService } from '../../_services/fetch-data.service';
 import { IRange, RangePreDefinirani } from '../../_models/i-range';
@@ -19,7 +19,8 @@ import { fetchEchartData } from '../../_utils/fetch-data-util';
   templateUrl: './egraf-po-tednih.component.html',
   styleUrl: './egraf-po-tednih.component.css'
 })
-export class EgrafPoTednihComponent implements OnInit {
+export class EgrafPoTednihComponent implements OnInit, OnChanges {
+  @Input() merilnoMesto?: any;
   mojElektroService = inject(MojElektroService);
   fetchDataService = inject(FetchDataService);
   ranges: IRange[] = new RangePreDefinirani().getRanges();
@@ -72,6 +73,12 @@ export class EgrafPoTednihComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['merilnoMesto'] && this.merilnoMesto) {
+      this.fetchData();
+    }
+  }
+
   ngOnInit(): void {
     // Ensure selectedRange has a sensible default value (last 7 days)
     if (!this.selectedRange.value || this.selectedRange.value.length !== 2) {
@@ -108,7 +115,9 @@ export class EgrafPoTednihComponent implements OnInit {
       this.mesecDO,
       (loading) => { this.isLoading = loading; },
       (error) => { this.error = error; },
-      (data) => { this.chartData = data; }
+      (data) => { this.chartData = data; },
+      this.merilnoMesto?.enotniIdentifikator,
+      this.merilnoMesto?.idJavnegaObjekta
     );
   }
 

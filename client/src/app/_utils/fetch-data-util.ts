@@ -16,7 +16,9 @@ export function fetchEchartData(
   mesecDO: number,
   setLoading: (loading: boolean) => void,
   setError: (error: string | null) => void,
-  setChartData: (data: IEchartData | null) => void
+  setChartData: (data: IEchartData | null) => void,
+  enotniIdentifikator?: string,
+  passedIdJavnegaObjekta?: number
 ): void {
   setError(null);
   setChartData(null);
@@ -26,10 +28,10 @@ export function fetchEchartData(
     return;
   }
 
-  const enotniIdentifikator = mojElektroService.mojElektroSignal()?.enotniIdentifikator;
-  const idJavnegaObjekta = mojElektroService.mojElektroSignal()?.idJavnegaObjekta;
+  const selectedEnotniIdentifikator = enotniIdentifikator ?? mojElektroService.mojElektroSignal()?.enotniIdentifikator;
+  const idJavnegaObjekta = passedIdJavnegaObjekta ?? mojElektroService.mojElektroSignal()?.idJavnegaObjekta;
 
-  if (!enotniIdentifikator) {
+  if (!selectedEnotniIdentifikator) {
     setError('No merilno mesto selected');
     return;
   }
@@ -41,7 +43,7 @@ export function fetchEchartData(
 
   fetchDataService.fetchEchartData(
     idJavnegaObjekta,
-    enotniIdentifikator,
+    selectedEnotniIdentifikator,
     sifraAgregacija,
     sifraEnergijaMoc,
     letoOD,

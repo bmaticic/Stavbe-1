@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges, effect } from '@angular/core';
 import { MojElektroService } from '../../_services/moj-elektro.service';
 import { FetchDataService } from '../../_services/fetch-data.service';
 import { IRange, RangePreDefinirani } from '../../_models/i-range';
@@ -19,7 +19,8 @@ import { fetchEchartData } from '../../_utils/fetch-data-util';
   templateUrl: './egraf-dnevni.component.html',
   styleUrls: ['./egraf-dnevni.component.css']
 })
-export class EgrafDnevniComponent implements OnInit {
+export class EgrafDnevniComponent implements OnInit, OnChanges {
+  @Input() merilnoMesto?: any;
   mojElektroService = inject(MojElektroService);
   fetchDataService = inject(FetchDataService);
   ranges: IRange[] = new RangePreDefinirani().getRanges();
@@ -60,7 +61,7 @@ export class EgrafDnevniComponent implements OnInit {
     // Watch for merilno mesto changes and re-fetch data
     effect(() => {
       const merilnoMesto = this.mojElektroService.mojElektroSignal();
-      if (merilnoMesto) {
+      if (!this.merilnoMesto && merilnoMesto) {
         this.fetchData();
       }
     });
@@ -72,6 +73,12 @@ export class EgrafDnevniComponent implements OnInit {
         this.fetchData();
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['merilnoMesto'] && this.merilnoMesto) {
+      this.fetchData();
+    }
   }
 
 
@@ -116,7 +123,9 @@ export class EgrafDnevniComponent implements OnInit {
       this.mesecDO,
       (loading) => { this.isLoading = loading; },
       (error) => { this.error = error; },
-      (data) => { this.chartData = data; }
+      (data) => { this.chartData = data; },
+      this.merilnoMesto?.enotniIdentifikator,
+      this.merilnoMesto?.idJavnegaObjekta
     );
   }
 }

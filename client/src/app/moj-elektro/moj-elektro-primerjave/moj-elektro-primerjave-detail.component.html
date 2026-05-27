@@ -1,0 +1,85 @@
+<div *ngIf="selectedDetails.length > 0; else noSelection">
+  <h2>Primerjava izbranih merilnih mest</h2>
+  <div class="row">
+    <table class="table table-hover mt-3">
+      <thead>
+        <tr>
+          <th style="width: 20%;">Stavba</th>
+          <th style="width: 10%;">Enotni Identifikator</th>
+          <th style="width: 10%;">GsrnMM</th>
+          <th style="width: 20%;">Naziv</th>
+          <th style="width: 20%;">Dobavitelj</th>
+          <th style="width: 10%;">RTP</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (merMesto of selectedDetails; track $index) {
+        <tr (click)="setActiveMesto(merMesto)" [class.table-active]="isActive(merMesto.enotniIdentifikator)">
+          <td>
+            <img src="{{ merMesto.photoUrl }}" alt="{{ merMesto.sifraJavnegaObjekta }}" class="img-moj-ele" />
+            {{ merMesto.nazivJavnegaObjekta }}
+          </td>
+          <td>{{ merMesto.enotniIdentifikator }}</td>
+          <td>{{ merMesto.gsrnMM }}</td>
+          <td>{{ merMesto.naziv }}</td>
+          <td>{{ merMesto.dobavitelj }}</td>
+          <td>{{ merMesto.rtp }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <tabset class="member-tabset">
+    <tab heading="Primerjalno po mesecih" [active]="true" (selectTab)="onTabSelect(0)">
+      @if(mojElektroService.activeTabSignal().valueOf() === 0)
+      {
+      @for (merMesto of selectedDetails; track $index) {
+      <div class="comparison-chart-card mb-4">
+        <h5>{{merMesto.enotniIdentifikator}} - {{merMesto.naziv}}</h5>
+        <app-egraf-dnevni [merilnoMesto]="merMesto"></app-egraf-dnevni>
+      </div>
+      }
+      }
+    </tab>
+    <tab heading="Primerjalno po tednih" (selectTab)="onTabSelect(1)">
+      @if(mojElektroService.activeTabSignal().valueOf() === 1)
+      {
+      @for (merMesto of selectedDetails; track $index) {
+      <div class="comparison-chart-card mb-4">
+        <h5>{{merMesto.enotniIdentifikator}} - {{merMesto.naziv}}</h5>
+        <app-egraf-po-tednih [merilnoMesto]="merMesto"></app-egraf-po-tednih>
+      </div>
+      }
+      }
+    </tab>
+    <tab heading="Primerjalno po urah" (selectTab)="onTabSelect(2)">
+      @if(mojElektroService.activeTabSignal().valueOf() === 2)
+      {
+      @for (merMesto of selectedDetails; track $index) {
+      <div class="comparison-chart-card mb-4">
+        <h5>{{merMesto.enotniIdentifikator}} - {{merMesto.naziv}}</h5>
+        <app-egraf-po-urah [merilnoMesto]="merMesto"></app-egraf-po-urah>
+      </div>
+      }
+      }
+    </tab>
+    <tab heading="Po blokih" (selectTab)="onTabSelect(3)">
+      @if(mojElektroService.activeTabSignal().valueOf() === 3)
+      {
+      @for (merMesto of selectedDetails; track $index) {
+      <div class="comparison-chart-card mb-4">
+        <h5>{{merMesto.enotniIdentifikator}} - {{merMesto.naziv}}</h5>
+        <app-egraf-po-blokih [merilnoMesto]="merMesto"></app-egraf-po-blokih>
+      </div>
+      }
+      }
+    </tab>
+  </tabset>
+</div>
+
+<ng-template #noSelection>
+  <div class="alert alert-warning mt-3">
+    Izberite vsaj eno merilno mesto in pritisnite Start, da prikažete primerjalno karto.
+  </div>
+</ng-template>

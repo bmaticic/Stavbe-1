@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges, effect } from '@angular/core';
 import { MojElektroService } from '../../_services/moj-elektro.service';
 import { FetchDataService } from '../../_services/fetch-data.service';
 import { IRange, RangePreDefinirani } from '../../_models/i-range';
@@ -17,7 +17,8 @@ import { fetchEchartData } from '../../_utils/fetch-data-util';
   templateUrl: './egraf-po-blokih.component.html',
   styleUrl: './egraf-po-blokih.component.css'
 })
-export class EgrafPoBlokihComponent implements OnInit {
+export class EgrafPoBlokihComponent implements OnInit, OnChanges {
+  @Input() merilnoMesto?: any;
   mojElektroService = inject(MojElektroService);
   fetchDataService = inject(FetchDataService);
   ranges: IRange[] = new RangePreDefinirani().getRanges();
@@ -66,10 +67,16 @@ export class EgrafPoBlokihComponent implements OnInit {
     // Watch for tab selection changes (tab index 0 = Dnevne količine)
     effect(() => {
       const activeTab = this.mojElektroService.activeTabSignal();
-      if (activeTab === 0 && this.mojElektroService.mojElektroSignal()) {
+      if (activeTab === 3 && this.mojElektroService.mojElektroSignal()) {
         this.fetchData();
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['merilnoMesto'] && this.merilnoMesto) {
+      this.fetchData();
+    }
   }
 
 
@@ -114,7 +121,9 @@ export class EgrafPoBlokihComponent implements OnInit {
       this.mesecDO,
       (loading) => { this.isLoading = loading; },
       (error) => { this.error = error; },
-      (data) => { this.chartData = data; }
+      (data) => { this.chartData = data; },
+      this.merilnoMesto?.enotniIdentifikator,
+      this.merilnoMesto?.idJavnegaObjekta
     );
   }
 

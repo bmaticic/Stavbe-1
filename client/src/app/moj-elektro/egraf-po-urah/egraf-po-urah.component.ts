@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges, effect } from '@angular/core';
 import { MojElektroService } from '../../_services/moj-elektro.service';
 import { FetchDataService } from '../../_services/fetch-data.service';
 import { IRange, RangePreDefinirani } from '../../_models/i-range';
@@ -19,7 +19,8 @@ import { fetchEchartData } from '../../_utils/fetch-data-util';
   templateUrl: './egraf-po-urah.component.html',
   styleUrl: './egraf-po-urah.component.css'
 })
-export class EgrafPoUrahComponent implements OnInit {
+export class EgrafPoUrahComponent implements OnInit, OnChanges {
+  @Input() merilnoMesto?: any;
   mojElektroService = inject(MojElektroService);
   fetchDataService = inject(FetchDataService);
   ranges: IRange[] = new RangePreDefinirani().getRanges();
@@ -66,10 +67,16 @@ export class EgrafPoUrahComponent implements OnInit {
 
     effect(() => {
       const activeTab = this.mojElektroService.activeTabSignal();
-      if (activeTab === 1 && this.mojElektroService.mojElektroSignal()) {
+      if (activeTab === 2 && this.mojElektroService.mojElektroSignal()) {
         this.fetchData();
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['merilnoMesto'] && this.merilnoMesto) {
+      this.fetchData();
+    }
   }
 
   ngOnInit(): void {
@@ -108,7 +115,9 @@ export class EgrafPoUrahComponent implements OnInit {
       this.mesecDO,
       (loading) => { this.isLoading = loading; },
       (error) => { this.error = error; },
-      (data) => { this.chartData = data; }
+      (data) => { this.chartData = data; },
+      this.merilnoMesto?.enotniIdentifikator,
+      this.merilnoMesto?.idJavnegaObjekta
     );
   }
 }
